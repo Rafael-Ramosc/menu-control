@@ -23,14 +23,18 @@ pub fn option_control(option: i32) {
             println!("Enter your user name: ");
             let mut user_name_select = String::new();
             std::io::stdin().read_line(&mut user_name_select).unwrap();
-            let user = User {
-                id: 1,
-                user_name: user_name_select,
-            };
-            println!("user created {}", user.user_name);
+            let user = create_user(user_name_select);
+
+            let user_name = User::get_username(user);
+            println!("User {} created ", user_name);
         }
         2 => println!("My name is Rafael Ramos"),
         3 => println!("Exiting..."),
         _ => println!("Invalid option!"),
     }
+}
+
+fn create_user(user_name_select: String) -> User {
+    let user_name_select = user_name_select.trim().to_string();
+    User::new(0, user_name_select)
 }
