@@ -2,10 +2,10 @@ pub struct User {
     id: i32,
     user_name: String,
     // pub dat_create: Date,
-    // pub preferences: Preferences,
+    // pub preferences: Configuration,
 }
 
-struct Preferences {
+struct Configuration {
     font_color: String,
     font_size: i32,
 }

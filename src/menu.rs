@@ -1,5 +1,5 @@
 pub mod user;
-use std::fmt::Display;
+use colored::*;
 
 use crate::menu::user::User;
 
@@ -22,7 +22,7 @@ pub fn option_control(option: i32) {
         1 => {
             let user = create_user();
             let user_name = User::get_username(user);
-            println!(" \\\\\\ User {} Created! ///", red(user_name));
+            println!(" \\\\\\ User {} Created! ///", user_name.red());
         }
         2 => println!("My name is Rafael Ramos"),
         3 => println!("Exiting..."),
@@ -39,16 +39,4 @@ fn create_user() -> User {
     let user_name_select = user_name_select.trim().to_string();
 
     User::new(0, user_name_select)
-}
-
-pub fn bold<T: Display>(text: T) -> String {
-    format!("\x1b[1m{}\x1b[0m", text)
-}
-
-pub fn color<T: Display>(text: T, color_code: &str) -> String {
-    format!("\x1b[{}m{}\x1b[0m", color_code, text)
-}
-
-pub fn red<T: Display>(text: T) -> String {
-    color(text, "31")
 }

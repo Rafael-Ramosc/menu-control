@@ -4,4 +4,4 @@ This is the attempt I made, but I'm not sure if it's the best way to do it.
 
 TO-DO: 
 
-- [] Create a "common" for functions like to create format of the text or maybe some pre existing crates that could help me with this.
+- [x] Create a "common" for functions like to create format of the text or maybe some pre existing crates that could help me with this.
