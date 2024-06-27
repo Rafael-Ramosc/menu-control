@@ -1,5 +1,6 @@
 pub mod user;
 use colored::*;
+use std::process;
 
 use crate::menu::user::User;
 
@@ -25,7 +26,10 @@ pub fn option_control(option: i32) {
             println!(" \\\\\\ User {} Created! ///", user_name.red());
         }
         2 => println!("My name is Rafael Ramos"),
-        3 => println!("Exiting..."),
+        3 => {
+            println!("Closing...");
+            process::exit(0);
+        }
         _ => println!("Invalid option!"),
     }
 }
