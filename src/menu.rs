@@ -1,5 +1,7 @@
+pub mod json;
 pub mod user;
 use colored::*;
+use serde_json;
 use std::process;
 
 use crate::menu::user::User;
@@ -7,8 +9,10 @@ use crate::menu::user::User;
 pub fn select_menu() {
     println!("Select a option:");
     println!("1. Create new user");
-    println!("2. About ME");
-    println!("3. EXIT");
+    println!("2. List of users");
+    println!("3. User preferences");
+    println!("4. About ME");
+    println!("5. EXIT");
 }
 
 pub fn select_option() -> i32 {
@@ -23,10 +27,16 @@ pub fn option_control(option: i32) {
         1 => {
             let user = create_user();
             let user_name = User::get_username(user);
-            println!(" \\\\\\ User {} Created! ///", user_name.red());
+            println!(" User {} Created!", user_name.red());
         }
-        2 => println!("My name is Rafael Ramos"),
+        2 => println!("List of users:"),
         3 => {
+            //todo: menu preferences
+            println!("users Preferences:");
+            // Configuration::get_user_name_color(user);
+        }
+        4 => println!("Rafael Ramos rafael.ramosrc@gmail.com"),
+        5 => {
             println!("Closing...");
             process::exit(0);
         }
@@ -42,5 +52,10 @@ fn create_user() -> User {
     std::io::stdin().read_line(&mut user_name_select).unwrap();
     let user_name_select = user_name_select.trim().to_string();
 
-    User::new(0, user_name_select)
+    let user: User = User::new(0, user_name_select);
+    let user_json = serde_json::to_string_pretty(&user).expect("Error converting String to Json");
+
+    json::json_data(&user_json).expect("Error when trying to write json");
+    println!("{:?}", user_json);
+    user
 }

@@ -1,3 +1,6 @@
+use serde::{Deserialize, Serialize};
+
+#[derive(Serialize, Deserialize, Debug)]
 pub struct User {
     id: i32,
     user_name: String,
@@ -18,7 +21,8 @@ impl User {
     }
 }
 
-struct Configuration {
+#[derive(Serialize, Deserialize, Debug)]
+pub struct Configuration {
     user_name_color: String,
 }
 
@@ -27,5 +31,9 @@ impl Configuration {
         Configuration {
             user_name_color: "RED".to_string(),
         }
+    }
+
+    pub fn get_user_name_color(self) -> String {
+        self.user_name_color
     }
 }
