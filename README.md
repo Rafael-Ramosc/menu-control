@@ -5,6 +5,6 @@ This is the attempt I made, but I'm not sure if it's the best way to do it.
 TO-DO: 
 
 - [x] Create a "common" for functions like to create format of the text or maybe some pre existing crates that could help me with this.
-- [] Create a way to persist the data using json.
+- [x] Create a way to persist the data using json.
 - [] Create configuration menu
 - [] use a terminal library to make the menu more interactive. (crossterm??)
