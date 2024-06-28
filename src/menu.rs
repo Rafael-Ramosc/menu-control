@@ -53,9 +53,10 @@ fn create_user() -> User {
     let user_name_select = user_name_select.trim().to_string();
 
     let user: User = User::new(0, user_name_select);
-    let user_json = serde_json::to_string_pretty(&user).expect("Error converting String to Json");
+    let new_user_json =
+        serde_json::to_string_pretty(&user).expect("Error converting String to Json");
 
-    json::json_data(&user_json).expect("Error when trying to write json");
-    println!("{:?}", user_json);
+    json::json_data(&new_user_json).expect("Error when trying to write json");
+    println!("{:?}", new_user_json);
     user
 }

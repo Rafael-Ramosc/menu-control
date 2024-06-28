@@ -1,0 +1,25 @@
+{
+  "users": [
+    {
+      "id": 0,
+      "preferences": {
+        "user_name_color": "RED"
+      },
+      "user_name": "rafael"
+    },
+    {
+      "id": 0,
+      "preferences": {
+        "user_name_color": "RED"
+      },
+      "user_name": "rafael"
+    },
+    {
+      "id": 0,
+      "preferences": {
+        "user_name_color": "RED"
+      },
+      "user_name": "rafael"
+    }
+  ]
+}
