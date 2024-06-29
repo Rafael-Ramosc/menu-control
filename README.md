@@ -1,10 +1,80 @@
-I was thinking about a game menu selection, and I was wondering if I could make something like.
+# User Management System
 
-This is the attempt I made, but I'm not sure if it's the best way to do it.
+This is a simple user management system developed in Rust. The project allows you to create new users, list existing users, and manage user preferences.
 
-TO-DO: 
+## Features
 
-- [x] Create a "common" for functions like to create format of the text or maybe some pre existing crates that could help me with this.
-- [x] Create a way to persist the data using json.
-- [] Create configuration menu
-- [] use a terminal library to make the menu more interactive. (crossterm??)
+- Create new users
+- List existing users
+- Manage user preferences
+- Store user data in JSON format
+
+## Requirements
+
+- Rust (2021 edition)
+- Cargo
+
+## Dependencies
+
+The project uses the following libraries:
+
+- `colored` (2.1.0): For coloring console output
+- `serde_json` (1.0.118): For JSON serialization and deserialization
+- `serde` (1.0): For deriving serialization/deserialization implementations
+
+## Installation
+
+1. Clone the repository:
+   ```markdown
+   git clone [YOUR_REPOSITORY_URL]
+   ```
+
+2. Navigate to the project directory:
+   ```markdown
+   cd menu-control
+   ```
+
+3. Compile and run the project:
+   ```markdown
+   cargo run
+   ```
+
+## Usage
+
+When you run the program, you'll see a menu with the following options:
+
+1. Create new user
+2. List users
+3. User preferences
+4. About
+5. Exit
+
+Select an option by typing the corresponding number and pressing Enter.
+
+## Project Structure
+
+- `main.rs`: Program entry point
+- `menu.rs`: Main menu logic and option control
+- `json.rs`: Functions for JSON file manipulation
+- `user.rs`: Definition of `User` and `Configuration` structures
+
+## Todo List
+
+- [ ] Implement user preferences menu
+- [ ] Add functionality to list all users
+- [X] Implement user data persistence
+- [ ] Add error handling for invalid user inputs
+- [ ] Add unit tests for core functionality
+- [ ] Improve documentation for each module
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit pull requests or open issues to discuss improvements or report bugs.
+
+## Author
+
+Rafael Ramos - rafael.ramosrc@gmail.com
+
+## License
+
+MIT license
