@@ -26,7 +26,7 @@ The project uses the following libraries:
 
 1. Clone the repository:
    ```markdown
-   git clone [YOUR_REPOSITORY_URL]
+   git clone
    ```
 
 2. Navigate to the project directory:
