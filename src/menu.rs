@@ -5,7 +5,6 @@ use serde_json;
 use std::process;
 
 use crate::menu::user::User;
-use std::any::{Any, TypeId};
 
 pub fn select_menu() {
     println!("Select a option:");
