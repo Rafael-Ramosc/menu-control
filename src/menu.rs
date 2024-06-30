@@ -5,6 +5,7 @@ use serde_json;
 use std::process;
 
 use crate::menu::user::User;
+use std::any::{Any, TypeId};
 
 pub fn select_menu() {
     println!("Select a option:");
@@ -19,7 +20,13 @@ pub fn select_option() -> i32 {
     println!("Enter a option number:");
     let mut option = String::new();
     std::io::stdin().read_line(&mut option).unwrap();
-    option.trim().parse::<i32>().unwrap()
+
+    let option = option.trim();
+
+    match option.parse::<i32>() {
+        Ok(num) => num,
+        Err(_) => 0,
+    }
 }
 
 pub fn option_control(option: i32) {
