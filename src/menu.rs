@@ -4,7 +4,8 @@ use colored::*;
 use serde_json;
 use std::process;
 
-use crate::menu::user::User;
+use crate::menu::json::json_read;
+use crate::menu::user::{Configuration, User};
 
 pub fn select_menu() {
     println!("Select a option:");
@@ -35,11 +36,12 @@ pub fn option_control(option: i32) {
             let user_name = User::get_username(user);
             println!(" User {} Created!", user_name.red());
         }
-        2 => println!("List of users:"),
+        2 => {
+            println!("List of users:");
+            get_users();
+        }
         3 => {
-            //todo: menu preferences
-            println!("users Preferences:");
-            // Configuration::get_user_name_color(user);
+            get_users();
         }
         4 => println!("Rafael Ramos rafael.ramosrc@gmail.com"),
         5 => {
@@ -65,4 +67,21 @@ fn create_user() -> User {
     json::json_data(&new_user_json).expect("Error when trying to write json");
     println!("{:?}", new_user_json);
     user
+}
+
+fn get_users() {
+    println!("users Preferences:");
+
+    match json_read("data/user.json") {
+        Ok(json) => {
+            if let Some(users) = json["users"].as_array() {
+                let mut count = 0;
+                for user in users {
+                    println!("{} User: {}", count, user["user_name"]);
+                    count += 1;
+                }
+            }
+        }
+        Err(e) => println!("Error reading JSON file: {}", e),
+    }
 }

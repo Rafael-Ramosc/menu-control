@@ -16,6 +16,8 @@ impl User {
         }
     }
 
+    pub fn get_user() {}
+
     pub fn get_username(self) -> String {
         self.user_name
     }
@@ -33,7 +35,7 @@ impl Configuration {
         }
     }
 
-    pub fn get_user_name_color(self) -> String {
-        self.user_name_color
+    pub fn get_user_name_color(&self) -> &str {
+        &self.user_name_color
     }
 }
