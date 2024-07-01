@@ -16,8 +16,6 @@ impl User {
         }
     }
 
-    pub fn get_user() {}
-
     pub fn get_username(self) -> String {
         self.user_name
     }

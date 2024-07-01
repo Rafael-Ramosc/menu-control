@@ -1,7 +1,8 @@
 mod menu;
+use colored::*;
 
 fn main() {
-    println!("**** Welcome! ****");
+    println!("{}", "**** Welcome! ****".green());
     loop {
         menu::select_menu();
 

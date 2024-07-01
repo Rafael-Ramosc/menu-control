@@ -1,5 +1,6 @@
 pub mod json;
 pub mod user;
+
 use colored::*;
 use serde_json;
 use std::process;
@@ -13,7 +14,7 @@ pub fn select_menu() {
     println!("2. List of users");
     println!("3. User preferences");
     println!("4. About ME");
-    println!("5. EXIT");
+    println!("{}", "5. EXIT".red());
 }
 
 pub fn select_option() -> i32 {
@@ -43,7 +44,7 @@ pub fn option_control(option: i32) {
         3 => {
             get_users();
         }
-        4 => println!("Rafael Ramos rafael.ramosrc@gmail.com"),
+        4 => println!("Rafael Ramos - rafael.ramosrc@gmail.com"),
         5 => {
             println!("Closing...");
             process::exit(0);
@@ -70,7 +71,7 @@ fn create_user() -> User {
 }
 
 fn get_users() {
-    println!("users Preferences:");
+    println!("User list:");
 
     match json_read("data/user.json") {
         Ok(json) => {
