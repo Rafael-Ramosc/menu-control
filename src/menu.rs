@@ -2,7 +2,7 @@ pub mod json;
 pub mod user;
 
 use colored::*;
-use serde_json;
+use serde_json::Value;
 use std::process;
 
 use crate::menu::json::json_read;
@@ -39,11 +39,9 @@ pub fn option_control(option: i32) {
         }
         2 => {
             println!("List of users:");
-            get_users();
+            users_list()
         }
-        3 => {
-            get_users();
-        }
+        3 => users_list(),
         4 => println!("Rafael Ramos - rafael.ramosrc@gmail.com"),
         5 => {
             println!("Closing...");
@@ -70,19 +68,38 @@ fn create_user() -> User {
     user
 }
 
-fn get_users() {
+fn users_list() {
     println!("User list:");
-
-    match json_read("data/user.json") {
-        Ok(json) => {
-            if let Some(users) = json["users"].as_array() {
-                let mut count = 0;
-                for user in users {
-                    println!("{} User: {}", count, user["user_name"]);
-                    count += 1;
-                }
+    match get_all_users() {
+        Ok(users) => {
+            let mut count = 0;
+            for user in users {
+                println!("{} User: {}", count, user.get_username());
+                count += 1;
             }
+            println!("TOTAL OF USERS: {}", (count).to_string().yellow());
         }
-        Err(e) => println!("Error reading JSON file: {}", e),
+        Err(e) => {
+            println!("Error when trying to read users: {}", e);
+        }
     }
 }
+
+pub fn get_all_users() -> Result<Vec<User>, Box<dyn std::error::Error>> {
+    let file_content = std::fs::read_to_string("data/user.json")?;
+    let json: Value = serde_json::from_str(&file_content)?;
+
+    if let Some(users) = json["users"].as_array() {
+        let user_vec: Result<Vec<User>, _> = users
+            .iter()
+            .map(|user| serde_json::from_value(user.clone()))
+            .collect();
+        user_vec.map_err(|e| e.into())
+    } else {
+        Ok(Vec::new())
+    }
+}
+
+// fn select_user() {
+//     get_all_users()
+// }
