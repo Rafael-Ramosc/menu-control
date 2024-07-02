@@ -45,11 +45,3 @@ pub fn json_data(new_user_json: &str) -> std::io::Result<()> {
 
     Ok(())
 }
-
-pub fn json_read(file_path: &str) -> Result<Value, Box<dyn std::error::Error>> {
-    let mut file = File::open(file_path)?;
-    let mut contents = String::new();
-    file.read_to_string(&mut contents)?;
-    let json: Value = serde_json::from_str(&contents)?;
-    Ok(json)
-}

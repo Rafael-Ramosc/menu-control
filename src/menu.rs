@@ -5,7 +5,6 @@ pub mod user;
 use crate::menu::helpers::*;
 use crate::menu::user::{Configuration, User};
 use colored::*;
-use serde_json::Value;
 use std::process;
 
 pub fn select_menu() {
