@@ -63,7 +63,7 @@ Select an option by typing the corresponding number and pressing Enter.
 - [ ] Implement user preferences menu
 - [ ] Add functionality to list all users
 - [X] Implement user data persistence
-- [ ] Add error handling for invalid user inputs
+- [X] Add error handling for invalid user inputs
 - [ ] Add unit tests for core functionality
 - [ ] Improve documentation for each module
 
