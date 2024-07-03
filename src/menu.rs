@@ -5,6 +5,12 @@ pub mod user;
 use crate::menu::helpers::*;
 use crate::menu::user::{Configuration, User};
 use colored::*;
+use crossterm::{
+    cursor,
+    style::{Color, SetForegroundColor},
+    terminal::{Clear, ClearType},
+    ExecutableCommand,
+};
 use std::process;
 
 pub fn select_menu() {
