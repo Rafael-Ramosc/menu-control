@@ -17,7 +17,6 @@ pub fn create_user() -> User {
         serde_json::to_string_pretty(&user).expect("Error converting String to Json");
 
     json::json_data(&new_user_json).expect("Error when trying to write json");
-    println!("{:?}", new_user_json);
     user
 }
 
@@ -56,8 +55,9 @@ pub fn get_all_users() -> Result<Vec<User>, Box<dyn std::error::Error>> {
 pub fn get_user_lenght() -> i32 {
     match get_all_users() {
         Ok(list) => list.len().try_into().unwrap(),
-        Err(e) => {
-            println!("Error when trying to read users: {}", e);
+        Err(_e) => {
+            // println!("Error when trying to read users: {}", e);
+            //Will return 0 because there is no list
             0
         }
     }
