@@ -22,18 +22,18 @@ pub fn select_menu() {
     println!("{}", "5. EXIT".red());
 }
 
-pub fn select_option() -> i32 {
-    println!("Enter a option number:");
-    let mut option = String::new();
-    std::io::stdin().read_line(&mut option).unwrap();
+// pub fn select_option() -> i32 {
+//     println!("Enter a option number:");
+//     let mut option = String::new();
+//     std::io::stdin().read_line(&mut option).unwrap();
 
-    let option = option.trim();
+//     let option = option.trim();
 
-    match option.parse::<i32>() {
-        Ok(num) => num,
-        Err(_) => 0,
-    }
-}
+//     match option.parse::<i32>() {
+//         Ok(num) => num,
+//         Err(_) => 0,
+//     }
+// }
 
 pub fn option_control(option: i32) {
     match option {
