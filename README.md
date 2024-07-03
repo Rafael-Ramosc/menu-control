@@ -61,7 +61,7 @@ Select an option by typing the corresponding number and pressing Enter.
 ## Todo List
 
 - [ ] Implement user preferences menu
-- [ ] Add functionality to list all users
+- [X] Add functionality to list all users
 - [X] Implement user data persistence
 - [X] Add error handling for invalid user inputs
 - [ ] Add unit tests for core functionality
