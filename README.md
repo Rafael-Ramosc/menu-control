@@ -66,6 +66,7 @@ Select an option by typing the corresponding number and pressing Enter.
 - [X] Add error handling for invalid user inputs
 - [ ] Add unit tests for core functionality
 - [ ] Improve documentation for each module
+- [ ] Improve interface render
 
 ## Contributing
 
