@@ -1,23 +1,33 @@
 use crate::menu::{json, user::User};
 use colored::*;
+use crossterm::{
+    cursor,
+    terminal::{Clear, ClearType},
+    ExecutableCommand,
+};
 use serde_json::Value;
+use std::io::{stdout, Write};
 
-pub fn create_user() -> User {
+pub fn create_user() -> Result<User, Box<dyn std::error::Error>> {
+    let mut stdout = stdout();
+    stdout.execute(Clear(ClearType::All))?;
+    stdout.execute(cursor::MoveTo(0, 0))?;
+
     println!(" ------- Creating new user -------");
-
     println!("Enter your user name: ");
+    stdout.flush()?;
+
     let mut user_name_select = String::new();
-    std::io::stdin().read_line(&mut user_name_select).unwrap();
+    std::io::stdin().read_line(&mut user_name_select)?;
     let user_name_select = user_name_select.trim().to_string();
 
-    let id_index = get_user_lenght();
+    let user: User = User::new(0, user_name_select);
+    let new_user_json = serde_json::to_string_pretty(&user)?;
 
-    let user: User = User::new(id_index, user_name_select);
-    let new_user_json =
-        serde_json::to_string_pretty(&user).expect("Error converting String to Json");
+    json::json_data(&new_user_json)?;
+    println!("{:?}", new_user_json);
 
-    json::json_data(&new_user_json).expect("Error when trying to write json");
-    user
+    Ok(user)
 }
 
 pub fn users_list() {
