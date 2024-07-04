@@ -5,6 +5,7 @@ use crossterm::{
     event::{self, Event, KeyCode, KeyEventKind},
     execute,
     terminal::{self, ClearType},
+    QueueableCommand,
 };
 use std::io::{stdout, Stdout, Write};
 use std::thread;
@@ -27,8 +28,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     loop {
         execute!(
             stdout,
-            terminal::Clear(terminal::ClearType::FromCursorUp),
-            cursor::Hide
+            terminal::Clear(terminal::ClearType::All),
+            cursor::MoveTo(0, 0)
         )?;
 
         menu::select_menu(selected_option);
@@ -55,11 +56,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     terminal::disable_raw_mode()?;
-    execute!(
-        stdout,
-        terminal::Clear(ClearType::All),
-        cursor::MoveTo(0, 0)
-    )?;
+
+    stdout.flush()?;
 
     Ok(())
 }

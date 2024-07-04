@@ -11,8 +11,10 @@ use crossterm::{
     terminal::{Clear, ClearType},
     ExecutableCommand,
 };
+use crossterm::{execute, terminal};
 use std::io::{stdout, Write};
 use std::process;
+use std::{thread, time};
 
 pub fn select_menu(selected: i32) {
     let mut stdout = stdout();
@@ -52,19 +54,39 @@ pub fn select_menu(selected: i32) {
 
 pub fn option_control(option: i32) -> Result<(), Box<dyn std::error::Error>> {
     let mut stdout = stdout();
-    stdout.execute(Clear(ClearType::All))?;
-    stdout.execute(cursor::MoveTo(0, 0))?;
+    execute!(
+        stdout,
+        terminal::Clear(ClearType::All),
+        cursor::MoveTo(0, 0)
+    )?;
 
     match option {
-        1 => {
-            let user = create_user();
-            let user_name = User::get_username(user?);
-            println!(" User {} Created!", user_name.red());
+        1 => match create_user("Enter your user name (or press TAB to return to menu):") {
+            Ok(Some(user)) => {
+                let user_name = User::get_username(user);
+                println!("{}", "SUCESS".green());
+                println!(" User {} Created!", user_name.red());
+                thread::sleep(time::Duration::from_secs(2));
+            }
+            Ok(None) => println!("User creation cancelled."),
+            Err(e) => println!("Error creating user: {}", e),
+        },
+        2 => {
+            execute!(
+                stdout,
+                terminal::Clear(ClearType::All),
+                cursor::MoveTo(0, 0)
+            )?;
+            users_list().unwrap();
         }
-        2 => println!("List of users:"),
         3 => println!("users Preferences:"),
-        4 => println!("Rafael Ramos rafael.ramosrc@gmail.com"),
+        4 => about_me().unwrap(),
         5 => {
+            execute!(
+                stdout,
+                terminal::Clear(ClearType::All),
+                cursor::MoveTo(0, 0)
+            )?;
             println!("Closing...");
             process::exit(0);
         }
