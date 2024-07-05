@@ -3,10 +3,11 @@ use colored::*;
 use crossterm::{
     cursor,
     event::{self, Event, KeyCode, KeyEventKind},
-    execute,
+    execute, queue,
     terminal::{self, ClearType},
     QueueableCommand,
 };
+use figlet_rs::FIGfont;
 use std::io::{stdout, Stdout, Write};
 use std::thread;
 use std::time::Duration;
@@ -22,7 +23,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     )?;
     let mut selected_option = 1;
 
-    println!("{}", "**** Welcome! ****".green());
     //thread::sleep(Duration::from_secs(2));
 
     loop {
@@ -32,7 +32,16 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             cursor::MoveTo(0, 0)
         )?;
 
+        let standard_font = FIGfont::standard().unwrap();
+        let figure = standard_font.convert("Welcome!").unwrap();
+        println!("{}", figure.to_string().green());
+
+        let (mut h, mut w) = terminal::size().unwrap();
+        println!("{}, {}", h, w);
+
         menu::select_menu(selected_option);
+
+        println!("{}", "@Rafael Ramos - 2024".bright_magenta());
 
         stdout.flush()?;
 

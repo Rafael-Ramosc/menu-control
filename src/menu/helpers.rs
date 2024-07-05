@@ -46,7 +46,6 @@ pub fn create_user(prompt: &str) -> Result<Option<User>, Box<dyn std::error::Err
                             let user: User = User::new(0, user_name_select.trim().to_string());
                             let new_user_json = serde_json::to_string_pretty(&user)?;
                             json::json_data(&new_user_json)?;
-                            println!("\n{:?}", new_user_json);
                             return Ok(Some(user));
                         }
                     }
@@ -62,7 +61,7 @@ pub fn create_user(prompt: &str) -> Result<Option<User>, Box<dyn std::error::Err
 }
 
 pub fn users_list() -> Result<(), Box<dyn std::error::Error>> {
-    println!("User list:");
+    println!("{}", "User list:".yellow());
     match get_all_users() {
         Ok(users) => {
             let mut count = 0;
