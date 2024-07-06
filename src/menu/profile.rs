@@ -1,39 +1,39 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
-pub struct User {
+pub struct Profile {
     id: i32,
-    user_name: String,
+    profile_name: String,
     pub preferences: Configuration,
 }
-//TODO(): transform this struct into a profile rather than user
-impl User {
-    pub fn new(id: i32, user_name: String) -> Self {
+
+impl Profile {
+    pub fn new(id: i32, profile_name: String) -> Self {
         Self {
             id,
-            user_name,
+            profile_name,
             preferences: Configuration::default(),
         }
     }
 
-    pub fn get_username(self) -> String {
-        self.user_name
+    pub fn get_profile_name(self) -> String {
+        self.profile_name
     }
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Configuration {
-    user_name_color: String,
+    user_profile_color: String,
 }
 
 impl Configuration {
     pub fn default() -> Configuration {
         Configuration {
-            user_name_color: "RED".to_string(),
+            user_profile_color: "RED".to_string(),
         }
     }
 
-    pub fn get_user_name_color(&self) -> &str {
-        &self.user_name_color
+    pub fn get_profile_color(&self) -> &str {
+        &self.user_profile_color
     }
 }

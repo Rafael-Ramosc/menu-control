@@ -1,9 +1,9 @@
 pub mod helpers;
 pub mod json;
-pub mod user;
+pub mod profile;
 
 use crate::menu::helpers::*;
-use crate::menu::user::{Configuration, User};
+use crate::menu::profile::{Configuration, Profile};
 use colored::*;
 use crossterm::{
     cursor,
@@ -19,9 +19,9 @@ use std::{thread, time};
 pub fn select_menu(selected: i32) {
     let mut stdout = stdout();
     let options = [
-        "1. Create new user",
-        "2. List of users",
-        "3. User preferences",
+        "1. Create new profile",
+        "2. List of profiles",
+        "3. profile preferences",
         "4. About ME",
         "5. EXIT",
     ];
@@ -61,15 +61,15 @@ pub fn option_control(option: i32) -> Result<(), Box<dyn std::error::Error>> {
     )?;
 
     match option {
-        1 => match create_user("Enter your user name (or press TAB to return to menu):") {
-            Ok(Some(user)) => {
-                let user_name = User::get_username(user);
-                println!("{}", "SUCESS".green());
-                println!(" User {} Created!", user_name.red());
+        1 => match create_profile("Enter your profile name (or press TAB to return to menu):") {
+            Ok(Some(profile)) => {
+                let profile_name = Profile::get_profile_name(profile);
+                println!("{}", " SUCESS".green());
+                println!(" profile {} Created!", profile_name.red());
                 thread::sleep(time::Duration::from_secs(2));
             }
-            Ok(None) => println!("User creation cancelled."),
-            Err(e) => println!("Error creating user: {}", e),
+            Ok(None) => println!("profile creation cancelled."),
+            Err(e) => println!("Error creating profile: {}", e),
         },
         2 => {
             execute!(
@@ -77,9 +77,9 @@ pub fn option_control(option: i32) -> Result<(), Box<dyn std::error::Error>> {
                 terminal::Clear(ClearType::All),
                 cursor::MoveTo(0, 0)
             )?;
-            users_list().unwrap();
+            profiles_list().unwrap();
         }
-        3 => println!("users Preferences:"),
+        3 => println!("profiles Preferences:"),
         4 => about_me().unwrap(),
         5 => {
             execute!(
