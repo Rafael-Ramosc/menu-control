@@ -1,11 +1,11 @@
 use serde_json::{json, Value};
-use std::fs::{self, File, OpenOptions};
+use std::fs::{self, OpenOptions};
 use std::io::{Read, Seek, SeekFrom, Write};
 use std::path::Path;
 
-pub fn json_data(new_user_json: &str) -> std::io::Result<()> {
+pub fn json_data(new_profile_json: &str) -> std::io::Result<()> {
     let dir_path = Path::new("data");
-    let file_path = dir_path.join("user.json");
+    let file_path = dir_path.join("profile.json");
 
     fs::create_dir_all(dir_path)?;
 
@@ -19,20 +19,20 @@ pub fn json_data(new_user_json: &str) -> std::io::Result<()> {
     file.read_to_string(&mut existing_content)?;
 
     let mut json_value: Value = if existing_content.is_empty() {
-        json!({ "users": [] })
+        json!({ "profiles": [] })
     } else {
         serde_json::from_str(&existing_content)?
     };
 
-    let new_user: Value = serde_json::from_str(new_user_json)
+    let new_profile: Value = serde_json::from_str(new_profile_json)
         .map_err(|e| std::io::Error::new(std::io::ErrorKind::InvalidData, e))?;
 
-    if let Some(users) = json_value["users"].as_array_mut() {
-        users.push(new_user);
+    if let Some(profiles) = json_value["profiles"].as_array_mut() {
+        profiles.push(new_profile);
     } else {
         return Err(std::io::Error::new(
             std::io::ErrorKind::InvalidData,
-            "JSON não contém um array 'users'",
+            "JSON não contém um array 'profiles'",
         ));
     }
 

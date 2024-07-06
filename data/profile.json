@@ -1,0 +1,11 @@
+{
+  "profiles": [
+    {
+      "id": 0,
+      "preferences": {
+        "user_profile_color": "RED"
+      },
+      "profile_name": "teste1"
+    }
+  ]
+}

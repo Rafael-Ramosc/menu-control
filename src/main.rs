@@ -3,12 +3,11 @@ use colored::*;
 use crossterm::{
     cursor,
     event::{self, Event, KeyCode, KeyEventKind},
-    execute, queue,
-    terminal::{self, ClearType},
-    QueueableCommand,
+    execute,
+    terminal::{self},
 };
 use figlet_rs::FIGfont;
-use std::io::{stdout, Stdout, Write};
+use std::io::{stdout, Write};
 use std::thread;
 use std::time::Duration;
 
@@ -36,7 +35,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         let figure = standard_font.convert("Welcome!").unwrap();
         println!("{}", figure.to_string().green());
 
-        let (mut h, mut w) = terminal::size().unwrap();
+        let (h, w) = terminal::size().unwrap();
         println!("{}, {}", h, w);
 
         menu::select_menu(selected_option);
