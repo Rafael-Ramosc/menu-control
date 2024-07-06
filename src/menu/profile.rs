@@ -33,7 +33,7 @@ impl Configuration {
         }
     }
 
-    pub fn get_user_profile_color(&self) -> &str {
+    pub fn get_profile_color(&self) -> &str {
         &self.user_profile_color
     }
 }
