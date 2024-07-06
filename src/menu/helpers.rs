@@ -4,7 +4,8 @@ use crossterm::{
     cursor,
     event::{self, Event, KeyCode, KeyEventKind},
     execute,
-    terminal::{self, Clear, ClearType},
+    style::{Color, SetForegroundColor},
+    terminal::{self, ClearType},
     ExecutableCommand,
 };
 use serde_json::Value;
@@ -71,7 +72,7 @@ pub fn profiles_list() -> Result<(), Box<dyn std::error::Error>> {
                 println!("{} profile: {}", count, profile.get_profile_name());
                 count += 1;
             }
-            println!("TOTAL OF profileS: {}", count.to_string().yellow());
+            println!("TOTAL OF PROFILES: {}", count.to_string().yellow());
         }
         Err(e) => {
             println!("Error when trying to read profiles: {}", e);
@@ -110,17 +111,6 @@ pub fn get_all_profiles() -> Result<Vec<Profile>, Box<dyn std::error::Error>> {
     }
 }
 
-// pub fn get_profile_lenght() -> i32 {
-//     match get_all_profiles() {
-//         Ok(list) => list.len().try_into().unwrap(),
-//         Err(_e) => {
-//             // println!("Error when trying to read profiles: {}", e);
-//             //Will return 0 because there is no list
-//             0
-//         }
-//     }
-// }
-
 pub fn about_me() -> Result<(), Box<dyn std::error::Error>> {
     let mut stdout = stdout();
 
@@ -152,4 +142,43 @@ pub fn about_me() -> Result<(), Box<dyn std::error::Error>> {
             }
         }
     }
+}
+
+pub fn select_menu(selected: u8) {
+    let options: [&str; 5] = [
+        "1. Create new profile",
+        "2. List of profiles",
+        "3. Profile preferences",
+        "4. About ME",
+        "5. EXIT",
+    ];
+
+    highlight_menu_selected(&options, selected);
+}
+
+pub fn profile_menu(selected: u8) {
+    let options: [&str; 5] = [
+        "1. Create new profile",
+        "2. List of profiles",
+        "3. Profile preferences",
+        "4. About ME",
+        "5. EXIT",
+    ];
+
+    highlight_menu_selected(&options, selected);
+}
+
+fn highlight_menu_selected(options: &[&str], selected: u8) {
+    let mut stdout = stdout();
+    for (i, option) in options.iter().enumerate() {
+        if (i as u8 + 1) == selected {
+            stdout.execute(SetForegroundColor(Color::Green)).unwrap();
+            print!("> ");
+        } else {
+            stdout.execute(SetForegroundColor(Color::White)).unwrap();
+            print!("  ");
+        }
+        println!("{}", option);
+    }
+    stdout.execute(SetForegroundColor(Color::White)).unwrap();
 }

@@ -5,6 +5,7 @@ pub mod profile;
 use crate::menu::helpers::*;
 use crate::menu::profile::{Configuration, Profile};
 use colored::*;
+use crossterm::event::{self, Event, KeyCode, KeyEventKind};
 use crossterm::{
     cursor,
     style::{Color, SetForegroundColor},
@@ -16,43 +17,7 @@ use std::io::{stdout, Write};
 use std::process;
 use std::{thread, time};
 
-pub fn select_menu(selected: i32) {
-    let mut stdout = stdout();
-    let options = [
-        "1. Create new profile",
-        "2. List of profiles",
-        "3. profile preferences",
-        "4. About ME",
-        "5. EXIT",
-    ];
-
-    for (i, option) in options.iter().enumerate() {
-        if (i as i32 + 1) == selected {
-            stdout.execute(SetForegroundColor(Color::Green)).unwrap();
-            print!("> ");
-        } else {
-            stdout.execute(SetForegroundColor(Color::White)).unwrap();
-            print!("  ");
-        }
-        println!("{}", option);
-    }
-    stdout.execute(SetForegroundColor(Color::White)).unwrap();
-}
-
-// pub fn select_option() -> i32 {
-//     println!("Enter a option number:");
-//     let mut option = String::new();
-//     std::io::stdin().read_line(&mut option).unwrap();
-
-//     let option = option.trim();
-
-//     match option.parse::<i32>() {
-//         Ok(num) => num,
-//         Err(_) => 0,
-//     }
-// }
-
-pub fn option_control(option: i32) -> Result<(), Box<dyn std::error::Error>> {
+pub fn option_control(option: u8) -> Result<(), Box<dyn std::error::Error>> {
     let mut stdout = stdout();
     execute!(
         stdout,
@@ -79,7 +44,15 @@ pub fn option_control(option: i32) -> Result<(), Box<dyn std::error::Error>> {
             )?;
             profiles_list().unwrap();
         }
-        3 => println!("profiles Preferences:"),
+        3 => {
+            execute!(
+                stdout,
+                terminal::Clear(ClearType::All),
+                cursor::MoveTo(0, 0)
+            )?;
+            println!("Profiles Preferences:");
+            profile_menu(option);
+        }
         4 => about_me().unwrap(),
         5 => {
             execute!(
@@ -98,4 +71,25 @@ pub fn option_control(option: i32) -> Result<(), Box<dyn std::error::Error>> {
     crossterm::event::read()?;
 
     Ok(())
+}
+
+pub fn key_read_menu(mut selected_option: u8) -> Result<(u8, bool), Box<dyn std::error::Error>> {
+    if let Event::Key(key_event) = event::read()? {
+        if key_event.kind == KeyEventKind::Press {
+            selected_option = match key_event.code {
+                KeyCode::Up => selected_option.saturating_sub(1).max(1),
+                KeyCode::Down => (selected_option + 1).min(5),
+                KeyCode::Enter => {
+                    option_control(selected_option)?;
+                    if selected_option == 5 {
+                        return Ok((selected_option, false));
+                    }
+                    selected_option
+                }
+                KeyCode::Esc => return Ok((selected_option, false)),
+                _ => selected_option,
+            };
+        }
+    }
+    Ok((selected_option, true))
 }

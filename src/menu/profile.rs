@@ -1,5 +1,7 @@
 use serde::{Deserialize, Serialize};
 
+const GREEN_COLOR: u8 = 2;
+
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Profile {
     id: i32,
@@ -23,17 +25,31 @@ impl Profile {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Configuration {
-    user_profile_color: String,
+    user_profile_color: u8,
 }
 
 impl Configuration {
     pub fn default() -> Configuration {
         Configuration {
-            user_profile_color: "RED".to_string(),
+            user_profile_color: GREEN_COLOR,
         }
     }
 
     pub fn get_profile_color(&self) -> &str {
-        &self.user_profile_color
+        let color = match &self.user_profile_color {
+            1 => "RED",
+            2 => "GREEN",
+            3 => "YELLOW",
+            4 => "BLUE",
+            5 => "MAGENTA",
+            6 => "CYAN",
+            7 => "WHITE",
+            _ => "RED",
+        };
+        color
+    }
+
+    pub fn set_profile_color(&mut self, color_selected: u8) {
+        self.user_profile_color = color_selected;
     }
 }

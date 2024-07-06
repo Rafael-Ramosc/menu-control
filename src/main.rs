@@ -20,7 +20,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         terminal::Clear(terminal::ClearType::All),
         cursor::MoveTo(0, 0)
     )?;
-    let mut selected_option = 1;
+    let mut selected_option: u8 = 1;
+    let mut should_continue = true;
 
     //thread::sleep(Duration::from_secs(2));
 
@@ -38,29 +39,33 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         let (h, w) = terminal::size().unwrap();
         println!("{}, {}", h, w);
 
-        menu::select_menu(selected_option);
+        menu::helpers::select_menu(selected_option);
 
         println!("{}", "@Rafael Ramos - 2024".bright_magenta());
 
         stdout.flush()?;
 
-        if let Event::Key(key_event) = event::read()? {
-            if key_event.kind == KeyEventKind::Press {
-                selected_option = match key_event.code {
-                    KeyCode::Up => selected_option.saturating_sub(1).max(1),
-                    KeyCode::Down => (selected_option + 1).min(5),
-                    KeyCode::Enter => {
-                        menu::option_control(selected_option)?;
-                        if selected_option == 5 {
-                            break;
-                        }
-                        selected_option
-                    }
-                    KeyCode::Esc => break,
-                    _ => selected_option,
-                };
-            }
+        while should_continue {
+            (selected_option, should_continue) = menu::key_read_menu(selected_option)?;
         }
+
+        //     if let Event::Key(key_event) = event::read()? {
+        //         if key_event.kind == KeyEventKind::Press {
+        //             selected_option = match key_event.code {
+        //                 KeyCode::Up => selected_option.saturating_sub(1).max(1),
+        //                 KeyCode::Down => (selected_option + 1).min(5),
+        //                 KeyCode::Enter => {
+        //                     menu::option_control(selected_option)?;
+        //                     if selected_option == 5 {
+        //                         break;
+        //                     }
+        //                     selected_option
+        //                 }
+        //                 KeyCode::Esc => break,
+        //                 _ => selected_option,
+        //             };
+        //         }
+        //     }
     }
 
     terminal::disable_raw_mode()?;
