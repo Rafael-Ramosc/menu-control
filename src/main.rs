@@ -46,6 +46,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         stdout.flush()?;
 
         if let Event::Key(key_event) = event::read()? {
+            Event::Resize(nw, nh) => {
+                h = nh;
+                w = nw;
+            };
             if key_event.kind == KeyEventKind::Press {
                 selected_option = match key_event.code {
                     KeyCode::Up => selected_option.saturating_sub(1).max(1),
