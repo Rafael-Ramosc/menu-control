@@ -6,7 +6,7 @@ pub struct User {
     user_name: String,
     pub preferences: Configuration,
 }
-
+//TODO(): transform this struct into a profile rather than user
 impl User {
     pub fn new(id: i32, user_name: String) -> Self {
         Self {

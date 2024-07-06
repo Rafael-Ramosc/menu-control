@@ -10,7 +10,7 @@ use crossterm::{
 use serde_json::Value;
 use std::io::{stdout, Write};
 
-//TODO()!: isso aqui deve ser um metodo associado
+//this function will follow the Separation of Concerns principle
 pub fn create_user(prompt: &str) -> Result<Option<User>, Box<dyn std::error::Error>> {
     let mut stdout = stdout();
 
