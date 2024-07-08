@@ -40,8 +40,17 @@ pub fn create_profile(prompt: &str) -> Result<Option<Profile>, Box<dyn std::erro
                     }
                     KeyCode::Enter => {
                         if !profile_name_select.is_empty() {
-                            let profile: Profile =
-                                Profile::new(0, profile_name_select.trim().to_string());
+                            //get the next id
+                            let mut profile_next_id: i32 = 0;
+                            match get_all_profiles() {
+                                Ok(profiles) => profile_next_id = profiles.len() as i32,
+                                Err(_) => profile_next_id = 0,
+                            }
+
+                            let profile: Profile = Profile::new(
+                                profile_next_id,
+                                profile_name_select.trim().to_string(),
+                            );
                             let new_profile_json = serde_json::to_string_pretty(&profile)?;
                             json::json_data(&new_profile_json)?;
                             return Ok(Some(profile));
@@ -156,5 +165,6 @@ pub fn clear_terminal() {
         stdout,
         terminal::Clear(terminal::ClearType::All),
         cursor::MoveTo(0, 0)
-    );
+    )
+    .expect("Error cleaning terminal");
 }
