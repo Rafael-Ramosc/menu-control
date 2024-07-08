@@ -45,8 +45,15 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
         stdout.flush()?;
 
-        while should_continue {
-            (selected_option, should_continue) = menu::key_read_menu(selected_option)?;
+        match menu::key_read_menu(selected_option)? {
+            (new_option, true) => {
+                selected_option = new_option;
+                // Option changed, but we continue the loop to redraw
+            }
+            (_, false) => {
+                // User chose to exit
+                break;
+            }
         }
 
         //     if let Event::Key(key_event) = event::read()? {
