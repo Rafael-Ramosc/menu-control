@@ -1,11 +1,6 @@
 mod menu;
 use colored::*;
-use crossterm::{
-    cursor,
-    event::{self, Event, KeyCode, KeyEventKind},
-    execute,
-    terminal::{self},
-};
+use crossterm::terminal::{self};
 use figlet_rs::FIGfont;
 use std::io::{stdout, Write};
 use std::thread;
