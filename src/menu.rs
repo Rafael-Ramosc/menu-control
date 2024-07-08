@@ -2,63 +2,18 @@ pub mod helpers;
 pub mod json;
 pub mod profile;
 
-use crate::menu::helpers::*;
 use crate::menu::profile::{Configuration, Profile};
+use crate::menu::{self, helpers::*};
 use colored::*;
-use crossterm::{
-    cursor,
-    style::{Color, SetForegroundColor},
-    terminal::{Clear, ClearType},
-    ExecutableCommand,
-};
-use crossterm::{execute, terminal};
+use crossterm::event::{self, Event, KeyCode, KeyEventKind};
+use crossterm::style::{Color, SetForegroundColor};
 use std::io::{stdout, Write};
 use std::process;
 use std::{thread, time};
 
-pub fn select_menu(selected: i32) {
+pub fn option_control(option: u8) -> Result<(), Box<dyn std::error::Error>> {
     let mut stdout = stdout();
-    let options = [
-        "1. Create new profile",
-        "2. List of profiles",
-        "3. profile preferences",
-        "4. About ME",
-        "5. EXIT",
-    ];
-
-    for (i, option) in options.iter().enumerate() {
-        if (i as i32 + 1) == selected {
-            stdout.execute(SetForegroundColor(Color::Green)).unwrap();
-            print!("> ");
-        } else {
-            stdout.execute(SetForegroundColor(Color::White)).unwrap();
-            print!("  ");
-        }
-        println!("{}", option);
-    }
-    stdout.execute(SetForegroundColor(Color::White)).unwrap();
-}
-
-// pub fn select_option() -> i32 {
-//     println!("Enter a option number:");
-//     let mut option = String::new();
-//     std::io::stdin().read_line(&mut option).unwrap();
-
-//     let option = option.trim();
-
-//     match option.parse::<i32>() {
-//         Ok(num) => num,
-//         Err(_) => 0,
-//     }
-// }
-
-pub fn option_control(option: i32) -> Result<(), Box<dyn std::error::Error>> {
-    let mut stdout = stdout();
-    execute!(
-        stdout,
-        terminal::Clear(ClearType::All),
-        cursor::MoveTo(0, 0)
-    )?;
+    menu::helpers::clear_terminal();
 
     match option {
         1 => match create_profile("Enter your profile name (or press TAB to return to menu):") {
@@ -72,21 +27,17 @@ pub fn option_control(option: i32) -> Result<(), Box<dyn std::error::Error>> {
             Err(e) => println!("Error creating profile: {}", e),
         },
         2 => {
-            execute!(
-                stdout,
-                terminal::Clear(ClearType::All),
-                cursor::MoveTo(0, 0)
-            )?;
+            menu::helpers::clear_terminal();
             profiles_list().unwrap();
         }
-        3 => println!("profiles Preferences:"),
+        3 => {
+            menu::helpers::clear_terminal();
+            println!("Profiles Preferences:");
+            profile_menu();
+        }
         4 => about_me().unwrap(),
         5 => {
-            execute!(
-                stdout,
-                terminal::Clear(ClearType::All),
-                cursor::MoveTo(0, 0)
-            )?;
+            menu::helpers::clear_terminal();
             println!("Closing...");
             process::exit(0);
         }
@@ -98,4 +49,89 @@ pub fn option_control(option: i32) -> Result<(), Box<dyn std::error::Error>> {
     crossterm::event::read()?;
 
     Ok(())
+}
+
+pub fn key_read_main_menu(
+    mut selected_option: u8,
+) -> Result<(u8, bool), Box<dyn std::error::Error>> {
+    if let Event::Key(key_event) = event::read()? {
+        if key_event.kind == KeyEventKind::Press {
+            selected_option = match key_event.code {
+                KeyCode::Up => selected_option.saturating_sub(1).max(1),
+                KeyCode::Down => (selected_option + 1).min(5),
+                KeyCode::Enter => {
+                    option_control(selected_option)?;
+                    if selected_option == 5 {
+                        return Ok((selected_option, false));
+                    }
+                    selected_option
+                }
+                KeyCode::Esc => return Ok((selected_option, false)),
+                _ => selected_option,
+            };
+        }
+    }
+    Ok((selected_option, true))
+}
+
+pub fn select_menu(selected: u8) {
+    let options: [&str; 5] = [
+        "1. Create new profile",
+        "2. List of profiles",
+        "3. Profile preferences",
+        "4. About",
+        "5. EXIT",
+    ];
+
+    helpers::highlight_menu_selected(&options, selected);
+}
+
+pub fn profile_menu() {
+    let options: [&str; 3] = [
+        "1. Change preferences",
+        "2. Delete profile",
+        "3. Back to menu",
+    ];
+
+    let mut selected_preference_menu: u8 = 1;
+
+    loop {
+        menu::helpers::clear_terminal();
+        helpers::highlight_menu_selected(&options, selected_preference_menu);
+
+        if let Event::Key(key_event) = event::read().unwrap() {
+            if key_event.kind == KeyEventKind::Press {
+                match key_event.code {
+                    KeyCode::Up => {
+                        selected_preference_menu = selected_preference_menu.saturating_sub(1).max(1)
+                    }
+                    KeyCode::Down => {
+                        selected_preference_menu = (selected_preference_menu + 1).min(3)
+                    }
+                    KeyCode::Enter => match selected_preference_menu {
+                        1 => {
+                            menu::helpers::clear_terminal();
+                            println!("Change preferences");
+                            change_preference();
+                        }
+                        2 => {
+                            menu::helpers::clear_terminal();
+                            println!("Delete profile");
+                            menu::helpers::delete_profile();
+                        }
+                        3 => {
+                            menu::helpers::clear_terminal();
+                            break;
+                        }
+                        _ => {}
+                    },
+                    KeyCode::Esc => {
+                        menu::helpers::clear_terminal();
+                        break;
+                    }
+                    _ => {}
+                }
+            }
+        }
+    }
 }

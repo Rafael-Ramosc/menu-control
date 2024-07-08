@@ -1,24 +1,21 @@
-use crate::menu::{json, profile::Profile};
+use crate::menu::{self, json, profile::Profile};
 use colored::*;
 use crossterm::{
     cursor,
     event::{self, Event, KeyCode, KeyEventKind},
     execute,
-    terminal::{self, Clear, ClearType},
+    style::{Color, SetForegroundColor},
+    terminal::{self},
     ExecutableCommand,
 };
 use serde_json::Value;
 use std::io::{stdout, Write};
+use std::{thread, time};
 
-//TODO()!: isso aqui deve ser um metodo associado
 pub fn create_profile(prompt: &str) -> Result<Option<Profile>, Box<dyn std::error::Error>> {
     let mut stdout = stdout();
 
-    execute!(
-        stdout,
-        terminal::Clear(ClearType::All),
-        cursor::MoveTo(0, 0)
-    )?;
+    menu::helpers::clear_terminal();
 
     println!(" ------- Creating new profile -------");
     println!("{}", prompt);
@@ -44,8 +41,18 @@ pub fn create_profile(prompt: &str) -> Result<Option<Profile>, Box<dyn std::erro
                     }
                     KeyCode::Enter => {
                         if !profile_name_select.is_empty() {
-                            let profile: Profile =
-                                Profile::new(0, profile_name_select.trim().to_string());
+                            //get the next id
+                            let mut profile_next_id: i32 = 0;
+                            match get_all_profiles() {
+                                Ok(profiles) => profile_next_id = profiles.len() as i32,
+                                Err(_) => profile_next_id = 0,
+                            }
+
+                            let profile: Profile = Profile::new(
+                                profile_next_id,
+                                profile_name_select.trim().to_string(),
+                                false,
+                            );
                             let new_profile_json = serde_json::to_string_pretty(&profile)?;
                             json::json_data(&new_profile_json)?;
                             return Ok(Some(profile));
@@ -71,7 +78,7 @@ pub fn profiles_list() -> Result<(), Box<dyn std::error::Error>> {
                 println!("{} profile: {}", count, profile.get_profile_name());
                 count += 1;
             }
-            println!("TOTAL OF profileS: {}", count.to_string().yellow());
+            println!("TOTAL OF PROFILES: {}", count.to_string().yellow());
         }
         Err(e) => {
             println!("Error when trying to read profiles: {}", e);
@@ -110,25 +117,10 @@ pub fn get_all_profiles() -> Result<Vec<Profile>, Box<dyn std::error::Error>> {
     }
 }
 
-// pub fn get_profile_lenght() -> i32 {
-//     match get_all_profiles() {
-//         Ok(list) => list.len().try_into().unwrap(),
-//         Err(_e) => {
-//             // println!("Error when trying to read profiles: {}", e);
-//             //Will return 0 because there is no list
-//             0
-//         }
-//     }
-// }
-
 pub fn about_me() -> Result<(), Box<dyn std::error::Error>> {
     let mut stdout = stdout();
 
-    execute!(
-        stdout,
-        terminal::Clear(terminal::ClearType::All),
-        cursor::MoveTo(0, 0)
-    )?;
+    menu::helpers::clear_terminal();
 
     println!(
         "{}",
@@ -152,4 +144,39 @@ pub fn about_me() -> Result<(), Box<dyn std::error::Error>> {
             }
         }
     }
+}
+
+pub fn highlight_menu_selected(options: &[&str], selected: u8) {
+    let mut stdout = stdout();
+    for (i, option) in options.iter().enumerate() {
+        if (i as u8 + 1) == selected {
+            stdout.execute(SetForegroundColor(Color::Green)).unwrap();
+            print!("> ");
+        } else {
+            stdout.execute(SetForegroundColor(Color::White)).unwrap();
+            print!("  ");
+        }
+        println!("{}", option);
+    }
+    stdout.execute(SetForegroundColor(Color::White)).unwrap();
+}
+
+pub fn clear_terminal() {
+    let mut stdout = stdout();
+    execute!(
+        stdout,
+        terminal::Clear(terminal::ClearType::All),
+        cursor::MoveTo(0, 0)
+    )
+    .expect("Error cleaning terminal");
+}
+
+pub fn delete_profile() {
+    println!("not implemented yet!");
+    thread::sleep(time::Duration::from_secs(2));
+}
+
+pub fn change_preference() {
+    println!("Not implemented yet!");
+    thread::sleep(time::Duration::from_secs(2));
 }

@@ -1,11 +1,6 @@
 mod menu;
 use colored::*;
-use crossterm::{
-    cursor,
-    event::{self, Event, KeyCode, KeyEventKind},
-    execute,
-    terminal::{self},
-};
+use crossterm::terminal::{self};
 use figlet_rs::FIGfont;
 use std::io::{stdout, Write};
 use std::thread;
@@ -15,21 +10,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     terminal::enable_raw_mode()?;
     let mut stdout = stdout();
 
-    execute!(
-        stdout,
-        terminal::Clear(terminal::ClearType::All),
-        cursor::MoveTo(0, 0)
-    )?;
-    let mut selected_option = 1;
+    menu::helpers::clear_terminal();
+    let mut selected_option: u8 = 1;
 
     //thread::sleep(Duration::from_secs(2));
 
     loop {
-        execute!(
-            stdout,
-            terminal::Clear(terminal::ClearType::All),
-            cursor::MoveTo(0, 0)
-        )?;
+        menu::helpers::clear_terminal();
 
         let standard_font = FIGfont::standard().unwrap();
         let figure = standard_font.convert("Welcome!").unwrap();
@@ -44,21 +31,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
         stdout.flush()?;
 
-        if let Event::Key(key_event) = event::read()? {
-            if key_event.kind == KeyEventKind::Press {
-                selected_option = match key_event.code {
-                    KeyCode::Up => selected_option.saturating_sub(1).max(1),
-                    KeyCode::Down => (selected_option + 1).min(5),
-                    KeyCode::Enter => {
-                        menu::option_control(selected_option)?;
-                        if selected_option == 5 {
-                            break;
-                        }
-                        selected_option
-                    }
-                    KeyCode::Esc => break,
-                    _ => selected_option,
-                };
+        match menu::key_read_main_menu(selected_option)? {
+            (new_option, true) => {
+                selected_option = new_option;
+            }
+            (_, false) => {
+                break;
             }
         }
     }
