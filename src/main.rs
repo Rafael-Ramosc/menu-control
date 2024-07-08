@@ -48,31 +48,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         match menu::key_read_menu(selected_option)? {
             (new_option, true) => {
                 selected_option = new_option;
-                // Option changed, but we continue the loop to redraw
             }
             (_, false) => {
-                // User chose to exit
                 break;
             }
         }
-
-        //     if let Event::Key(key_event) = event::read()? {
-        //         if key_event.kind == KeyEventKind::Press {
-        //             selected_option = match key_event.code {
-        //                 KeyCode::Up => selected_option.saturating_sub(1).max(1),
-        //                 KeyCode::Down => (selected_option + 1).min(5),
-        //                 KeyCode::Enter => {
-        //                     menu::option_control(selected_option)?;
-        //                     if selected_option == 5 {
-        //                         break;
-        //                     }
-        //                     selected_option
-        //                 }
-        //                 KeyCode::Esc => break,
-        //                 _ => selected_option,
-        //             };
-        //         }
-        //     }
     }
 
     terminal::disable_raw_mode()?;
