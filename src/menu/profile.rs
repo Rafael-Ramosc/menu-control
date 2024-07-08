@@ -6,14 +6,16 @@ const GREEN_COLOR: u8 = 2;
 pub struct Profile {
     id: i32,
     profile_name: String,
+    is_blocked: bool,
     pub preferences: Configuration,
 }
 
 impl Profile {
-    pub fn new(id: i32, profile_name: String) -> Self {
+    pub fn new(id: i32, profile_name: String, is_blocked: bool) -> Self {
         Self {
             id,
             profile_name,
+            is_blocked,
             preferences: Configuration::default(),
         }
     }
