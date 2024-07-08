@@ -1,25 +1,20 @@
-use crate::menu::{json, profile::Profile};
+use crate::menu::{self, json, profile::Profile};
 use colored::*;
 use crossterm::{
     cursor,
     event::{self, Event, KeyCode, KeyEventKind},
     execute,
     style::{Color, SetForegroundColor},
-    terminal::{self, ClearType},
+    terminal::{self},
     ExecutableCommand,
 };
 use serde_json::Value;
 use std::io::{stdout, Write};
 
-//TODO()!: isso aqui deve ser um metodo associado
 pub fn create_profile(prompt: &str) -> Result<Option<Profile>, Box<dyn std::error::Error>> {
     let mut stdout = stdout();
 
-    execute!(
-        stdout,
-        terminal::Clear(ClearType::All),
-        cursor::MoveTo(0, 0)
-    )?;
+    menu::helpers::clear_terminal();
 
     println!(" ------- Creating new profile -------");
     println!("{}", prompt);
@@ -114,11 +109,7 @@ pub fn get_all_profiles() -> Result<Vec<Profile>, Box<dyn std::error::Error>> {
 pub fn about_me() -> Result<(), Box<dyn std::error::Error>> {
     let mut stdout = stdout();
 
-    execute!(
-        stdout,
-        terminal::Clear(terminal::ClearType::All),
-        cursor::MoveTo(0, 0)
-    )?;
+    menu::helpers::clear_terminal();
 
     println!(
         "{}",
@@ -144,31 +135,7 @@ pub fn about_me() -> Result<(), Box<dyn std::error::Error>> {
     }
 }
 
-pub fn select_menu(selected: u8) {
-    let options: [&str; 5] = [
-        "1. Create new profile",
-        "2. List of profiles",
-        "3. Profile preferences",
-        "4. About ME",
-        "5. EXIT",
-    ];
-
-    highlight_menu_selected(&options, selected);
-}
-
-pub fn profile_menu(selected: u8) {
-    let options: [&str; 5] = [
-        "1. Create new profile",
-        "2. List of profiles",
-        "3. Profile preferences",
-        "4. About ME",
-        "5. EXIT",
-    ];
-
-    highlight_menu_selected(&options, selected);
-}
-
-fn highlight_menu_selected(options: &[&str], selected: u8) {
+pub fn highlight_menu_selected(options: &[&str], selected: u8) {
     let mut stdout = stdout();
     for (i, option) in options.iter().enumerate() {
         if (i as u8 + 1) == selected {
@@ -181,4 +148,13 @@ fn highlight_menu_selected(options: &[&str], selected: u8) {
         println!("{}", option);
     }
     stdout.execute(SetForegroundColor(Color::White)).unwrap();
+}
+
+pub fn clear_terminal() {
+    let mut stdout = stdout();
+    execute!(
+        stdout,
+        terminal::Clear(terminal::ClearType::All),
+        cursor::MoveTo(0, 0)
+    );
 }

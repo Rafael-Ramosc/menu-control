@@ -2,8 +2,8 @@ pub mod helpers;
 pub mod json;
 pub mod profile;
 
-use crate::menu::helpers::*;
 use crate::menu::profile::{Configuration, Profile};
+use crate::menu::{self, helpers::*};
 use colored::*;
 use crossterm::event::{self, Event, KeyCode, KeyEventKind};
 use crossterm::{
@@ -19,11 +19,7 @@ use std::{thread, time};
 
 pub fn option_control(option: u8) -> Result<(), Box<dyn std::error::Error>> {
     let mut stdout = stdout();
-    execute!(
-        stdout,
-        terminal::Clear(ClearType::All),
-        cursor::MoveTo(0, 0)
-    )?;
+    menu::helpers::clear_terminal();
 
     match option {
         1 => match create_profile("Enter your profile name (or press TAB to return to menu):") {
@@ -37,29 +33,17 @@ pub fn option_control(option: u8) -> Result<(), Box<dyn std::error::Error>> {
             Err(e) => println!("Error creating profile: {}", e),
         },
         2 => {
-            execute!(
-                stdout,
-                terminal::Clear(ClearType::All),
-                cursor::MoveTo(0, 0)
-            )?;
+            menu::helpers::clear_terminal();
             profiles_list().unwrap();
         }
         3 => {
-            execute!(
-                stdout,
-                terminal::Clear(ClearType::All),
-                cursor::MoveTo(0, 0)
-            )?;
+            menu::helpers::clear_terminal();
             println!("Profiles Preferences:");
             profile_menu(option);
         }
         4 => about_me().unwrap(),
         5 => {
-            execute!(
-                stdout,
-                terminal::Clear(ClearType::All),
-                cursor::MoveTo(0, 0)
-            )?;
+            menu::helpers::clear_terminal();
             println!("Closing...");
             process::exit(0);
         }
@@ -73,7 +57,9 @@ pub fn option_control(option: u8) -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
-pub fn key_read_menu(mut selected_option: u8) -> Result<(u8, bool), Box<dyn std::error::Error>> {
+pub fn key_read_main_menu(
+    mut selected_option: u8,
+) -> Result<(u8, bool), Box<dyn std::error::Error>> {
     if let Event::Key(key_event) = event::read()? {
         if key_event.kind == KeyEventKind::Press {
             selected_option = match key_event.code {
@@ -92,4 +78,26 @@ pub fn key_read_menu(mut selected_option: u8) -> Result<(u8, bool), Box<dyn std:
         }
     }
     Ok((selected_option, true))
+}
+
+pub fn select_menu(selected: u8) {
+    let options: [&str; 5] = [
+        "1. Create new profile",
+        "2. List of profiles",
+        "3. Profile preferences",
+        "4. About",
+        "5. EXIT",
+    ];
+
+    helpers::highlight_menu_selected(&options, selected);
+}
+
+pub fn profile_menu(selected: u8) {
+    let options: [&str; 3] = [
+        "1. Change preferences",
+        "2. Delete profile",
+        "3. Back to menu",
+    ];
+
+    helpers::highlight_menu_selected(&options, selected);
 }

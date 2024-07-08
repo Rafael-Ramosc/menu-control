@@ -15,22 +15,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     terminal::enable_raw_mode()?;
     let mut stdout = stdout();
 
-    execute!(
-        stdout,
-        terminal::Clear(terminal::ClearType::All),
-        cursor::MoveTo(0, 0)
-    )?;
+    menu::helpers::clear_terminal();
     let mut selected_option: u8 = 1;
-    let mut should_continue = true;
 
     //thread::sleep(Duration::from_secs(2));
 
     loop {
-        execute!(
-            stdout,
-            terminal::Clear(terminal::ClearType::All),
-            cursor::MoveTo(0, 0)
-        )?;
+        menu::helpers::clear_terminal();
 
         let standard_font = FIGfont::standard().unwrap();
         let figure = standard_font.convert("Welcome!").unwrap();
@@ -39,13 +30,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         let (h, w) = terminal::size().unwrap();
         println!("{}, {}", h, w);
 
-        menu::helpers::select_menu(selected_option);
+        menu::select_menu(selected_option);
 
         println!("{}", "@Rafael Ramos - 2024".bright_magenta());
 
         stdout.flush()?;
 
-        match menu::key_read_menu(selected_option)? {
+        match menu::key_read_main_menu(selected_option)? {
             (new_option, true) => {
                 selected_option = new_option;
             }
