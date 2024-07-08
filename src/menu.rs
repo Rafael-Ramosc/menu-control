@@ -6,13 +6,7 @@ use crate::menu::profile::{Configuration, Profile};
 use crate::menu::{self, helpers::*};
 use colored::*;
 use crossterm::event::{self, Event, KeyCode, KeyEventKind};
-use crossterm::{
-    cursor,
-    style::{Color, SetForegroundColor},
-    terminal::{Clear, ClearType},
-    ExecutableCommand,
-};
-use crossterm::{execute, terminal};
+use crossterm::style::{Color, SetForegroundColor};
 use std::io::{stdout, Write};
 use std::process;
 use std::{thread, time};
@@ -39,7 +33,7 @@ pub fn option_control(option: u8) -> Result<(), Box<dyn std::error::Error>> {
         3 => {
             menu::helpers::clear_terminal();
             println!("Profiles Preferences:");
-            profile_menu(option);
+            profile_menu();
         }
         4 => about_me().unwrap(),
         5 => {
@@ -92,12 +86,52 @@ pub fn select_menu(selected: u8) {
     helpers::highlight_menu_selected(&options, selected);
 }
 
-pub fn profile_menu(selected: u8) {
+pub fn profile_menu() {
     let options: [&str; 3] = [
         "1. Change preferences",
         "2. Delete profile",
         "3. Back to menu",
     ];
 
-    helpers::highlight_menu_selected(&options, selected);
+    let mut selected_preference_menu: u8 = 1;
+
+    loop {
+        menu::helpers::clear_terminal();
+        helpers::highlight_menu_selected(&options, selected_preference_menu);
+
+        if let Event::Key(key_event) = event::read().unwrap() {
+            if key_event.kind == KeyEventKind::Press {
+                match key_event.code {
+                    KeyCode::Up => {
+                        selected_preference_menu = selected_preference_menu.saturating_sub(1).max(1)
+                    }
+                    KeyCode::Down => {
+                        selected_preference_menu = (selected_preference_menu + 1).min(3)
+                    }
+                    KeyCode::Enter => match selected_preference_menu {
+                        1 => {
+                            menu::helpers::clear_terminal();
+                            println!("Change preferences");
+                            change_preference();
+                        }
+                        2 => {
+                            menu::helpers::clear_terminal();
+                            println!("Delete profile");
+                            menu::helpers::delete_profile();
+                        }
+                        3 => {
+                            menu::helpers::clear_terminal();
+                            break;
+                        }
+                        _ => {}
+                    },
+                    KeyCode::Esc => {
+                        menu::helpers::clear_terminal();
+                        break;
+                    }
+                    _ => {}
+                }
+            }
+        }
+    }
 }
