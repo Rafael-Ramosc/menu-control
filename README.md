@@ -1,6 +1,6 @@
 # Menu control
 
-This is a simple user management system developed in Rust. The project allows you to create new users, list existing users, and manage user preferences.I found myself pondering about menu systems and their implementation. This curiosity, combined with my desire to start a new project, led to the creation of Menu Control.
+This is a simple user management system developed in Rust. The project allows you to create new users, list existing users, and manage user preferences. I found myself pondering about menu systems and their implementation. This curiosity, combined with my desire to start a new project, led to the creation of Menu Control.
 
 ## Key Features:
 
@@ -43,8 +43,8 @@ The project uses the following libraries:
 When you run the program, you'll see a menu with the following options:
 
 1. Create new user
-2. List users
-3. User preferences
+2. List profiles
+3. Profile preferences
 4. About
 5. Exit
 
@@ -55,7 +55,7 @@ Select an option by typing the corresponding number and pressing Enter.
 - `main.rs`: Program entry point
 - `menu.rs`: Main menu logic and option control
 - `json.rs`: Functions for JSON file manipulation
-- `user.rs`: Definition of `User` and `Preference` structures
+- `profile.rs`: Definition of `profile` and `Configuration` structures
 
 ## Todo List
 
