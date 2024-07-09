@@ -1,23 +1,22 @@
-# User Management System
+# Menu control
 
-This is a simple user management system developed in Rust. The project allows you to create new users, list existing users, and manage user preferences.
+This is a simple user management system developed in Rust. The project allows you to create new users, list existing users, and manage user preferences.I found myself pondering about menu systems and their implementation. This curiosity, combined with my desire to start a new project, led to the creation of Menu Control.
 
-## Features
+## Key Features:
 
-- Create new users
+- Interactive command-line interface with colored output
+- Data persistence using JSON
+- Create and manage user profiles
 - List existing users
-- Manage user preferences
-- Store user data in JSON format
+- Customize user preferences
 
-## Requirements
-
-- Rust (2021 edition)
-- Cargo
+This project serves as a playground for exploring Rust's capabilities in creating interactive console applications.
 
 ## Dependencies
 
 The project uses the following libraries:
 
+- `crossterm` (0.27.0): For terminal manipulation
 - `colored` (2.1.0): For coloring console output
 - `serde_json` (1.0.118): For JSON serialization and deserialization
 - `serde` (1.0): For deriving serialization/deserialization implementations
@@ -56,7 +55,7 @@ Select an option by typing the corresponding number and pressing Enter.
 - `main.rs`: Program entry point
 - `menu.rs`: Main menu logic and option control
 - `json.rs`: Functions for JSON file manipulation
-- `user.rs`: Definition of `User` and `Configuration` structures
+- `user.rs`: Definition of `User` and `Preference` structures
 
 ## Todo List
 
