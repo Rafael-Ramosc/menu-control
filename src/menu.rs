@@ -86,6 +86,7 @@ pub fn select_menu(selected: u8) {
     helpers::highlight_menu_selected(&options, selected);
 }
 
+//todo: finish the profile menu
 pub fn profile_menu() {
     let options: [&str; 3] = [
         "1. Change preferences",
