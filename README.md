@@ -1,7 +1,7 @@
 ![Menu control interface](github/preview-readme.png)
 # Menu control
 
-This is a simple user management system developed in Rust. The project allows you to create new users, list existing users, and manage user preferences. I found myself pondering about menu systems and their implementation. This curiosity, combined with my desire to start a new project, led to the creation of Menu Control.
+I found myself pondering about menu systems and their implementation. This curiosity, combined with my desire to start a new project, led to the creation of Menu Control. This is a simple user management system developed in Rust. The project allows you to create new users, list existing users, and manage user preferences.
 
 ## Key Features:
 
