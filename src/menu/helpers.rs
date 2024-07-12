@@ -1,4 +1,5 @@
 use crate::menu::{self, json, profile::Profile};
+use crate::utils;
 use colored::*;
 use crossterm::{
     cursor,
@@ -15,7 +16,7 @@ use std::{thread, time};
 pub fn create_profile(prompt: &str) -> Result<Option<Profile>, Box<dyn std::error::Error>> {
     let mut stdout = stdout();
 
-    menu::helpers::clear_terminal();
+    utils::common::clear_terminal();
 
     println!(" ------- Creating new profile -------");
     println!("{}", prompt);
@@ -120,7 +121,7 @@ pub fn get_all_profiles() -> Result<Vec<Profile>, Box<dyn std::error::Error>> {
 pub fn about_me() -> Result<(), Box<dyn std::error::Error>> {
     let mut stdout = stdout();
 
-    menu::helpers::clear_terminal();
+    utils::common::clear_terminal();
 
     println!(
         "{}",
@@ -159,16 +160,6 @@ pub fn highlight_menu_selected(options: &[&str], selected: u8) {
         println!("{}", option);
     }
     stdout.execute(SetForegroundColor(Color::White)).unwrap();
-}
-
-pub fn clear_terminal() {
-    let mut stdout = stdout();
-    execute!(
-        stdout,
-        terminal::Clear(terminal::ClearType::All),
-        cursor::MoveTo(0, 0)
-    )
-    .expect("Error cleaning terminal");
 }
 
 pub fn delete_profile() {

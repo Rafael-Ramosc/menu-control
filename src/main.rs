@@ -14,13 +14,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     terminal::enable_raw_mode()?;
     let mut stdout = stdout();
 
-    menu::helpers::clear_terminal();
+    utils::common::clear_terminal();
     let mut selected_option: u8 = 1;
 
     //thread::sleep(Duration::from_secs(2));
 
     loop {
-        menu::helpers::clear_terminal();
+        utils::common::clear_terminal();
 
         let standard_font = FIGfont::standard().unwrap();
         let figure = standard_font.convert("Menu Control!").unwrap();

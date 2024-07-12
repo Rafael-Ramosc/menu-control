@@ -4,6 +4,7 @@ pub mod profile;
 
 use crate::menu::profile::{Configuration, Profile};
 use crate::menu::{self, helpers::*};
+use crate::utils;
 use colored::*;
 use crossterm::event::{self, Event, KeyCode, KeyEventKind};
 use crossterm::style::{Color, SetForegroundColor};
@@ -13,7 +14,7 @@ use std::{thread, time};
 
 pub fn option_control(option: u8) -> Result<(), Box<dyn std::error::Error>> {
     let mut stdout = stdout();
-    menu::helpers::clear_terminal();
+    utils::common::clear_terminal();
 
     match option {
         1 => match create_profile("Enter your profile name (or press TAB to return to menu):") {
@@ -27,17 +28,17 @@ pub fn option_control(option: u8) -> Result<(), Box<dyn std::error::Error>> {
             Err(e) => println!("Error creating profile: {}", e),
         },
         2 => {
-            menu::helpers::clear_terminal();
+            utils::common::clear_terminal();
             profiles_list().unwrap();
         }
         3 => {
-            menu::helpers::clear_terminal();
+            utils::common::clear_terminal();
             println!("Profiles Preferences:");
             profile_menu();
         }
         4 => about_me().unwrap(),
         5 => {
-            menu::helpers::clear_terminal();
+            utils::common::clear_terminal();
             println!("Closing...");
             process::exit(0);
         }
@@ -97,7 +98,7 @@ pub fn profile_menu() {
     let mut selected_preference_menu: u8 = 1;
 
     loop {
-        menu::helpers::clear_terminal();
+        utils::common::clear_terminal();
         helpers::highlight_menu_selected(&options, selected_preference_menu);
 
         if let Event::Key(key_event) = event::read().unwrap() {
@@ -111,23 +112,23 @@ pub fn profile_menu() {
                     }
                     KeyCode::Enter => match selected_preference_menu {
                         1 => {
-                            menu::helpers::clear_terminal();
+                            utils::common::clear_terminal();
                             println!("Change preferences");
                             change_preference();
                         }
                         2 => {
-                            menu::helpers::clear_terminal();
+                            utils::common::clear_terminal();
                             println!("Delete profile");
                             menu::helpers::delete_profile();
                         }
                         3 => {
-                            menu::helpers::clear_terminal();
+                            utils::common::clear_terminal();
                             break;
                         }
                         _ => {}
                     },
                     KeyCode::Esc => {
-                        menu::helpers::clear_terminal();
+                        utils::common::clear_terminal();
                         break;
                     }
                     _ => {}
