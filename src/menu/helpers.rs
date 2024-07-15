@@ -71,7 +71,7 @@ pub fn create_profile(prompt: &str) -> Result<Option<Profile>, Box<dyn std::erro
 
 pub fn profiles_list() -> Result<(), Box<dyn std::error::Error>> {
     println!("{}", "profile list:".yellow());
-    match get_all_profiles() {
+    match get_profile_filtered() {
         Ok(profiles) => {
             let mut count = 0;
             for profile in profiles {
@@ -112,18 +112,22 @@ pub fn get_all_profiles() -> Result<Vec<Profile>, Box<dyn std::error::Error>> {
             .iter()
             .map(|profile| serde_json::from_value(profile.clone()))
             .collect();
-
         let all_profiles = profile_vec?;
 
-        let unblocked_profiles: Vec<Profile> = all_profiles
-            .into_iter()
-            .filter(|profile| !profile.get_profile_status())
-            .collect();
-
-        Ok(unblocked_profiles)
+        Ok(all_profiles)
     } else {
         Ok(Vec::new())
     }
+}
+
+pub fn get_profile_filtered() -> Result<Vec<Profile>, Box<dyn std::error::Error>> {
+    let all_profiles = get_all_profiles()?;
+    let unblocked_profiles: Vec<Profile> = all_profiles
+        .into_iter()
+        .filter(|profile| !profile.get_profile_status())
+        .collect();
+
+    Ok(unblocked_profiles)
 }
 
 pub fn about_me() -> Result<(), Box<dyn std::error::Error>> {

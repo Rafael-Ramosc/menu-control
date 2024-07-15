@@ -31,6 +31,10 @@ impl Profile {
     pub fn get_profile_status(&self) -> bool {
         self.is_blocked
     }
+
+    pub fn set_profile_status(&mut self, status: bool) {
+        self.is_blocked = status;
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug)]
