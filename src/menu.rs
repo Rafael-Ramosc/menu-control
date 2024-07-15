@@ -1,5 +1,6 @@
 pub mod helpers;
 pub mod json;
+pub mod preferences;
 pub mod profile;
 
 use crate::menu::profile::{Configuration, Profile};
@@ -114,12 +115,12 @@ pub fn profile_menu() {
                         1 => {
                             utils::common::clear_terminal();
                             println!("Change preferences");
-                            change_preference();
+                            menu::preferences::change_preference();
                         }
                         2 => {
                             utils::common::clear_terminal();
                             println!("Delete profile");
-                            menu::helpers::delete_profile();
+                            menu::preferences::delete_profile();
                         }
                         3 => {
                             utils::common::clear_terminal();

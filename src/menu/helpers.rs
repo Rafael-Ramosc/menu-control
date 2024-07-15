@@ -11,7 +11,6 @@ use crossterm::{
 };
 use serde_json::Value;
 use std::io::{stdout, Write};
-use std::{thread, time};
 
 pub fn create_profile(prompt: &str) -> Result<Option<Profile>, Box<dyn std::error::Error>> {
     let mut stdout = stdout();
@@ -160,14 +159,4 @@ pub fn highlight_menu_selected(options: &[&str], selected: u8) {
         println!("{}", option);
     }
     stdout.execute(SetForegroundColor(Color::White)).unwrap();
-}
-
-pub fn delete_profile() {
-    println!("not implemented yet!");
-    thread::sleep(time::Duration::from_secs(2));
-}
-
-pub fn change_preference() {
-    println!("Not implemented yet!");
-    thread::sleep(time::Duration::from_secs(2));
 }
