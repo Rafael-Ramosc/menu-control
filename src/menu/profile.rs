@@ -23,6 +23,14 @@ impl Profile {
     pub fn get_profile_name(self) -> String {
         self.profile_name
     }
+
+    pub fn get_profile_id(&self) -> i32 {
+        self.id
+    }
+
+    pub fn get_profile_status(&self) -> bool {
+        self.is_blocked
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug)]

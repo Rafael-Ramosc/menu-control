@@ -81,7 +81,8 @@ pub fn profiles_list() -> Result<(), Box<dyn std::error::Error>> {
             println!("TOTAL OF PROFILES: {}", count.to_string().yellow());
         }
         Err(e) => {
-            println!("Error when trying to read profiles: {}", e);
+            println!("{}", "TOTAL OF PROFILES: 0".to_string().yellow());
+            println!("None profile finded: {}", e);
         }
     }
 
@@ -111,7 +112,15 @@ pub fn get_all_profiles() -> Result<Vec<Profile>, Box<dyn std::error::Error>> {
             .iter()
             .map(|profile| serde_json::from_value(profile.clone()))
             .collect();
-        profile_vec.map_err(|e| e.into())
+
+        let all_profiles = profile_vec?;
+
+        let unblocked_profiles: Vec<Profile> = all_profiles
+            .into_iter()
+            .filter(|profile| !profile.get_profile_status())
+            .collect();
+
+        Ok(unblocked_profiles)
     } else {
         Ok(Vec::new())
     }
