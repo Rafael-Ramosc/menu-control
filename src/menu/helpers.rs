@@ -1,14 +1,7 @@
-use crate::menu::{self, json, profile::Profile};
+use crate::menu::{json, profile::Profile};
 use crate::utils;
 use colored::*;
-use crossterm::{
-    cursor,
-    event::{self, Event, KeyCode, KeyEventKind},
-    execute,
-    style::{Color, SetForegroundColor},
-    terminal::{self},
-    ExecutableCommand,
-};
+use crossterm::event::{self, Event, KeyCode, KeyEventKind};
 use serde_json::Value;
 use std::io::{stdout, Write};
 
@@ -157,19 +150,4 @@ pub fn about_me() -> Result<(), Box<dyn std::error::Error>> {
             }
         }
     }
-}
-
-pub fn highlight_menu_selected(options: &[&str], selected: u8) {
-    let mut stdout = stdout();
-    for (i, option) in options.iter().enumerate() {
-        if (i as u8 + 1) == selected {
-            stdout.execute(SetForegroundColor(Color::Green)).unwrap();
-            print!("> ");
-        } else {
-            stdout.execute(SetForegroundColor(Color::White)).unwrap();
-            print!("  ");
-        }
-        println!("{}", option);
-    }
-    stdout.execute(SetForegroundColor(Color::White)).unwrap();
 }

@@ -5,10 +5,9 @@ pub mod profile;
 
 use crate::menu::profile::{Configuration, Profile};
 use crate::menu::{self, helpers::*};
-use crate::utils;
+use crate::utils::{self, common};
 use colored::*;
 use crossterm::event::{self, Event, KeyCode, KeyEventKind};
-use crossterm::style::{Color, SetForegroundColor};
 use std::io::{stdout, Write};
 use std::process;
 use std::{thread, time};
@@ -85,7 +84,7 @@ pub fn select_menu(selected: u8) {
         "5. EXIT",
     ];
 
-    helpers::highlight_menu_selected(&options, selected);
+    utils::common::highlight_menu_selected(&options, selected);
 }
 
 //todo: finish the profile menu
@@ -99,8 +98,8 @@ pub fn profile_menu() {
     let mut selected_preference_menu: u8 = 1;
 
     loop {
-        utils::common::clear_terminal();
-        helpers::highlight_menu_selected(&options, selected_preference_menu);
+        common::clear_terminal();
+        common::highlight_menu_selected(&options, selected_preference_menu);
 
         if let Event::Key(key_event) = event::read().unwrap() {
             if key_event.kind == KeyEventKind::Press {
@@ -115,12 +114,12 @@ pub fn profile_menu() {
                         1 => {
                             utils::common::clear_terminal();
                             println!("Change preferences");
-                            menu::preferences::change_preference();
+                            menu::preferences::change_preference_menu();
                         }
                         2 => {
                             utils::common::clear_terminal();
                             println!("Delete profile");
-                            menu::preferences::delete_profile();
+                            menu::preferences::delete_profile_menu();
                         }
                         3 => {
                             utils::common::clear_terminal();
