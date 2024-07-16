@@ -3,10 +3,11 @@ use crossterm::{
     event::{self, Event, KeyCode, KeyEventKind},
     execute,
     style::{Color, Print, SetForegroundColor},
-    terminal, ExecutableCommand,
+    terminal,
 };
 use std::io::{stdout, Write};
 
+//todo: move controls relate code to a separate file
 pub enum MenuAction {
     Navigate(usize),
     Select,

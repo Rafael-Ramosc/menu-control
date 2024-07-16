@@ -1,8 +1,6 @@
 mod menu;
 mod utils;
 
-use colored::*;
-use crossterm::cursor;
 use crossterm::terminal::{self};
 use std::io::{stdout, Write};
 use utils::render::calculate_column;
