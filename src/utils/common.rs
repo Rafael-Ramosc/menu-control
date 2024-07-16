@@ -1,11 +1,11 @@
 use crossterm::{
-    cursor,
+    cursor::{self, MoveTo},
     event::{self, Event, KeyCode, KeyEventKind},
     execute,
-    style::{Color, SetForegroundColor},
+    style::{Color, Print, SetForegroundColor},
     terminal, ExecutableCommand,
 };
-use std::io::stdout;
+use std::io::{stdout, Write};
 
 pub enum MenuAction {
     Navigate(usize),
@@ -14,10 +14,28 @@ pub enum MenuAction {
     Exit,
 }
 
-pub fn navigate_menu(
+pub fn navigate_and_highlight_menu(
+    options: &[&str],
     current_selection: usize,
-    num_options: usize,
 ) -> Result<MenuAction, Box<dyn std::error::Error>> {
+    let mut stdout = stdout();
+    let num_options = options.len();
+
+    // Highlight the menu
+    for (i, option) in options.iter().enumerate() {
+        if i == current_selection {
+            execute!(stdout, SetForegroundColor(Color::Green))?;
+            print!("> ");
+        } else {
+            execute!(stdout, SetForegroundColor(Color::White))?;
+            print!("  ");
+        }
+        println!("{}", option);
+    }
+    execute!(stdout, SetForegroundColor(Color::White))?;
+    stdout.flush()?;
+
+    // Handle user input
     if let Event::Key(key_event) = event::read()? {
         if key_event.kind == KeyEventKind::Press {
             return Ok(match key_event.code {
@@ -43,17 +61,16 @@ pub fn clear_terminal() {
     .expect("Error cleaning terminal");
 }
 
-pub fn highlight_menu_selected(options: &[&str], selected: usize) {
-    let mut stdout = stdout();
-    for (i, option) in options.iter().enumerate() {
-        if (i as usize + 1) == selected {
-            stdout.execute(SetForegroundColor(Color::Green)).unwrap();
-            print!("> ");
-        } else {
-            stdout.execute(SetForegroundColor(Color::White)).unwrap();
-            print!("  ");
-        }
-        println!("{}", option);
-    }
-    stdout.execute(SetForegroundColor(Color::White)).unwrap();
+pub fn print_at(x: u16, y: u16, text: &str) -> std::io::Result<()> {
+    execute!(stdout(), MoveTo(x, y), Print(text))
+}
+
+pub fn print_at_colored(x: u16, y: u16, text: &str, color: Color) -> std::io::Result<()> {
+    execute!(
+        stdout(),
+        MoveTo(x, y),
+        SetForegroundColor(color),
+        Print(text),
+        SetForegroundColor(Color::Reset)
+    )
 }

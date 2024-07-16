@@ -5,139 +5,117 @@ pub mod profile;
 
 use crate::menu::profile::{Configuration, Profile};
 use crate::menu::{self, helpers::*};
-use crate::utils::{self, common};
+use crate::utils::common::{
+    clear_terminal, navigate_and_highlight_menu, print_at_colored, MenuAction,
+};
+use crate::utils::{self};
 use colored::*;
-use crossterm::event::{self, Event, KeyCode, KeyEventKind};
-use std::io::{stdout, Write};
+use crossterm::event::{self};
+use crossterm::style::Color;
+use figlet_rs::FIGfont;
 use std::process;
 use std::{thread, time};
 
-pub fn option_control(option: usize) -> Result<(), Box<dyn std::error::Error>> {
-    let mut stdout = stdout();
-    utils::common::clear_terminal();
-
-    match option {
-        1 => match create_profile("Enter your profile name (or press TAB to return to menu):") {
-            Ok(Some(profile)) => {
-                let profile_name = Profile::get_profile_name(&profile);
-                println!("{}", " SUCESS".green());
-                println!(" profile {} Created!", profile_name.red());
-                thread::sleep(time::Duration::from_secs(2));
-            }
-            Ok(None) => println!("profile creation cancelled."),
-            Err(e) => println!("Error creating profile: {}", e),
-        },
-        2 => {
-            utils::common::clear_terminal();
-            profiles_list().unwrap();
-        }
-        3 => {
-            utils::common::clear_terminal();
-            println!("Profiles Preferences:");
-            profile_menu();
-        }
-        4 => about_me().unwrap(),
-        5 => {
-            utils::common::clear_terminal();
-            println!("Closing...");
-            process::exit(0);
-        }
-        _ => println!("Invalid option!"),
-    }
-
-    println!("\nPress any key to return to the menu...");
-    stdout.flush()?;
-    crossterm::event::read()?;
-
-    Ok(())
-}
-
-pub fn key_read_main_menu(
-    mut selected_option: usize,
-) -> Result<(usize, bool), Box<dyn std::error::Error>> {
-    if let Event::Key(key_event) = event::read()? {
-        if key_event.kind == KeyEventKind::Press {
-            selected_option = match key_event.code {
-                KeyCode::Up => selected_option.saturating_sub(1).max(1),
-                KeyCode::Down => (selected_option + 1).min(5),
-                KeyCode::Enter => {
-                    option_control(selected_option)?;
-                    if selected_option == 5 {
-                        return Ok((selected_option, false));
-                    }
-                    selected_option
-                }
-                KeyCode::Esc => return Ok((selected_option, false)),
-                _ => selected_option,
-            };
-        }
-    }
-    Ok((selected_option, true))
-}
-
-pub fn select_menu(selected: usize) {
-    let options: [&str; 5] = [
+pub fn main_menu() -> Result<(), Box<dyn std::error::Error>> {
+    let options = vec![
         "1. Create new profile",
         "2. List of profiles",
         "3. Profile preferences",
         "4. About",
-        "5. EXIT",
+        "5. Exit",
     ];
+    let mut selected_option = 0;
 
-    utils::common::highlight_menu_selected(&options, selected);
+    loop {
+        clear_terminal();
+
+        //Title
+        let standard_font = FIGfont::standard().unwrap();
+        let figure = standard_font.convert("Menu Control").unwrap();
+        println!("{}", figure.to_string().green());
+
+        match navigate_and_highlight_menu(&options, selected_option)? {
+            MenuAction::Navigate(new_selection) => selected_option = new_selection,
+            MenuAction::Select => {
+                match selected_option {
+                    0 => match create_profile(
+                        "Enter your profile name (or press TAB to return to menu):",
+                    ) {
+                        Ok(Some(profile)) => {
+                            let profile_name = Profile::get_profile_name(&profile);
+                            println!("{}", " SUCESS".green());
+                            println!(" profile {} Created!", profile_name.red());
+                            thread::sleep(time::Duration::from_secs(2));
+                        }
+                        Ok(None) => println!("profile creation cancelled."),
+                        Err(e) => println!("Error creating profile: {}", e),
+                    },
+                    1 => {
+                        utils::common::clear_terminal();
+                        profiles_list().unwrap();
+                    }
+                    2 => {
+                        utils::common::clear_terminal();
+                        println!("Profiles Preferences:");
+                        profile_menu()?; //todo: better error handling
+                    }
+                    3 => about_me().unwrap(), //todo: better error handling
+                    4 => {
+                        utils::common::clear_terminal();
+                        println!("Closing...");
+                        process::exit(0);
+                    }
+                    _ => println!("Invalid option!"),
+                }
+                println!("\nPress any key to return to the menu...");
+                event::read()?;
+            }
+            MenuAction::Back => continue,
+            MenuAction::Exit => return Ok(()),
+        }
+
+        print_at_colored(100, 100, "@Rafael Ramos - 2024", Color::Red)?; //FIXME: is not working, maybe i need to calculate the terminal size
+    }
 }
 
 //todo: finish the profile menu
-pub fn profile_menu() {
-    let options: [&str; 3] = [
+pub fn profile_menu() -> Result<(), Box<dyn std::error::Error>> {
+    let options = vec![
         "1. Change preferences",
         "2. Delete profile",
         "3. Back to menu",
     ];
-
-    let mut selected_preference_menu: usize = 1;
+    let mut selected_option = 0;
 
     loop {
-        common::clear_terminal();
-        common::highlight_menu_selected(&options, selected_preference_menu);
+        clear_terminal();
 
-        if let Event::Key(key_event) = event::read().unwrap() {
-            if key_event.kind == KeyEventKind::Press {
-                match key_event.code {
-                    KeyCode::Up => {
-                        selected_preference_menu = selected_preference_menu.saturating_sub(1).max(1)
+        match navigate_and_highlight_menu(&options, selected_option)? {
+            MenuAction::Navigate(new_selection) => selected_option = new_selection,
+            MenuAction::Select => {
+                match selected_option {
+                    0 => {
+                        clear_terminal();
+                        println!("Change preferences");
+                        menu::preferences::change_preference_menu();
                     }
-                    KeyCode::Down => {
-                        selected_preference_menu = (selected_preference_menu + 1).min(3)
+                    1 => {
+                        clear_terminal();
+                        match preferences::delete_profile_menu() {
+                            Ok(_) => println!("Profile deleted successfully."),
+                            Err(e) => println!("An error occurred while deleting profile: {}", e),
+                        }
                     }
-                    KeyCode::Enter => match selected_preference_menu {
-                        1 => {
-                            utils::common::clear_terminal();
-                            println!("Change preferences");
-                            menu::preferences::change_preference_menu();
-                        }
-                        2 => {
-                            utils::common::clear_terminal();
-                            match menu::preferences::delete_profile_menu() {
-                                Ok(_) => {}
-                                Err(e) => {
-                                    println!("An error occurred while deleting profile: {}", e)
-                                }
-                            }
-                        }
-                        3 => {
-                            utils::common::clear_terminal();
-                            break;
-                        }
-                        _ => {}
-                    },
-                    KeyCode::Esc => {
-                        utils::common::clear_terminal();
-                        break;
-                    }
-                    _ => {}
+                    2 => break, // Back to main menu
+                    _ => println!("Invalid option!"),
                 }
+                println!("\nPress any key to continue...");
+                crossterm::event::read()?;
             }
+            MenuAction::Back => break,
+            MenuAction::Exit => return Ok(()), // Exit the entire program
         }
     }
+
+    Ok(())
 }

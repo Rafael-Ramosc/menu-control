@@ -1,38 +1,37 @@
 use crate::menu;
 use crate::menu::profile::Profile;
-use crate::utils::common;
+use crate::utils::common::{self, clear_terminal};
 use crate::{
     menu::{get_all_profiles, preferences},
-    utils::common::{highlight_menu_selected, navigate_menu, MenuAction},
+    utils::common::{navigate_and_highlight_menu, MenuAction},
 };
 use std::{option, thread, time};
 
 pub fn delete_profile_menu() -> Result<(), Box<dyn std::error::Error>> {
-    let mut selected_option: usize = 0;
+    let mut selected_option = 0;
     let options = delete_profile_list()?;
 
     loop {
-        common::clear_terminal();
-
+        clear_terminal();
         println!("Delete profile");
 
         let option_slice: Vec<&str> = options.iter().map(AsRef::as_ref).collect();
-        highlight_menu_selected(&option_slice, selected_option);
 
-        match navigate_menu(selected_option, options.len())? {
-            MenuAction::Navigate(new_selection) => selected_option = new_selection,
-            MenuAction::Select => {
-                // Handle profile deletion here
+        match common::navigate_and_highlight_menu(&option_slice, selected_option)? {
+            common::MenuAction::Navigate(new_selection) => selected_option = new_selection,
+            common::MenuAction::Select => {
                 println!("Deleting profile: {}", options[selected_option]);
+                // TODO: Implement actual profile deletion logic here
                 thread::sleep(time::Duration::from_secs(2));
             }
-            MenuAction::Back => break,
-            MenuAction::Exit => return Ok(()),
+            common::MenuAction::Back => break,
+            common::MenuAction::Exit => return Ok(()),
         }
     }
 
     Ok(())
 }
+
 fn delete_profile_list() -> Result<Vec<String>, Box<dyn std::error::Error>> {
     let profile_list = get_all_profiles()?;
 
