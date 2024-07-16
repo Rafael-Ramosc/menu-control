@@ -5,10 +5,8 @@ use crate::{
     menu::{get_all_profiles, preferences},
     utils::common::{highlight_menu_selected, navigate_menu, MenuAction},
 };
-
 use std::{option, thread, time};
-//todo: receber uma lista do tipo Vec<String>, converter para um array slice e usar
-//como options_list
+
 pub fn delete_profile_menu() -> Result<(), Box<dyn std::error::Error>> {
     let mut selected_option: usize = 0;
     let options = delete_profile_list()?;

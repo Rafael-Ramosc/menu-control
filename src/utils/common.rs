@@ -33,7 +33,6 @@ pub fn navigate_menu(
     Ok(MenuAction::Navigate(current_selection))
 }
 
-//todo(): puts here all function that i use in almost every file: ->clean_terminal()
 pub fn clear_terminal() {
     let mut stdout = stdout();
     execute!(
