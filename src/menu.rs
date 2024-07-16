@@ -12,14 +12,14 @@ use std::io::{stdout, Write};
 use std::process;
 use std::{thread, time};
 
-pub fn option_control(option: u8) -> Result<(), Box<dyn std::error::Error>> {
+pub fn option_control(option: usize) -> Result<(), Box<dyn std::error::Error>> {
     let mut stdout = stdout();
     utils::common::clear_terminal();
 
     match option {
         1 => match create_profile("Enter your profile name (or press TAB to return to menu):") {
             Ok(Some(profile)) => {
-                let profile_name = Profile::get_profile_name(profile);
+                let profile_name = Profile::get_profile_name(&profile);
                 println!("{}", " SUCESS".green());
                 println!(" profile {} Created!", profile_name.red());
                 thread::sleep(time::Duration::from_secs(2));
@@ -53,8 +53,8 @@ pub fn option_control(option: u8) -> Result<(), Box<dyn std::error::Error>> {
 }
 
 pub fn key_read_main_menu(
-    mut selected_option: u8,
-) -> Result<(u8, bool), Box<dyn std::error::Error>> {
+    mut selected_option: usize,
+) -> Result<(usize, bool), Box<dyn std::error::Error>> {
     if let Event::Key(key_event) = event::read()? {
         if key_event.kind == KeyEventKind::Press {
             selected_option = match key_event.code {
@@ -75,7 +75,7 @@ pub fn key_read_main_menu(
     Ok((selected_option, true))
 }
 
-pub fn select_menu(selected: u8) {
+pub fn select_menu(selected: usize) {
     let options: [&str; 5] = [
         "1. Create new profile",
         "2. List of profiles",
@@ -95,7 +95,7 @@ pub fn profile_menu() {
         "3. Back to menu",
     ];
 
-    let mut selected_preference_menu: u8 = 1;
+    let mut selected_preference_menu: usize = 1;
 
     loop {
         common::clear_terminal();
@@ -118,8 +118,12 @@ pub fn profile_menu() {
                         }
                         2 => {
                             utils::common::clear_terminal();
-                            println!("Delete profile");
-                            menu::preferences::delete_profile_menu();
+                            match menu::preferences::delete_profile_menu() {
+                                Ok(_) => {}
+                                Err(e) => {
+                                    println!("An error occurred while deleting profile: {}", e)
+                                }
+                            }
                         }
                         3 => {
                             utils::common::clear_terminal();

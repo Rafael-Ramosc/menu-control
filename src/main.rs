@@ -15,7 +15,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut stdout = stdout();
 
     utils::common::clear_terminal();
-    let mut selected_option: u8 = 1;
+    let mut selected_option: usize = 1;
 
     //thread::sleep(Duration::from_secs(2));
 

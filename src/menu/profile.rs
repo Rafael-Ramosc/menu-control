@@ -20,8 +20,8 @@ impl Profile {
         }
     }
 
-    pub fn get_profile_name(self) -> String {
-        self.profile_name
+    pub fn get_profile_name(&self) -> &String {
+        &self.profile_name
     }
 
     pub fn get_profile_id(&self) -> i32 {
