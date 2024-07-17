@@ -9,8 +9,6 @@ use crossterm::{
 use figlet_rs::FIGfont;
 use std::io::{stdout, Write};
 
-use crate::utils::navigate::MenuAction;
-
 struct Menu {
     options: Vec<String>,
     selected: usize,
@@ -37,17 +35,6 @@ impl Menu {
         let figure = standard_font.convert(&self.title).unwrap();
         println!("{}", figure.to_string().green());
 
-        // Render options
-        for (i, option) in self.options.iter().enumerate() {
-            if i == self.selected {
-                execute!(stdout, SetForegroundColor(Color::Green))?;
-                println!("> {}", option);
-                execute!(stdout, ResetColor)?;
-            } else {
-                println!("  {}", option);
-            }
-        }
-
         // Render footer
         let (cols, rows) = size()?;
         execute!(stdout, MoveTo(0, rows - 1), SetForegroundColor(Color::Red))?;
@@ -56,27 +43,5 @@ impl Menu {
 
         stdout.flush()?;
         Ok(())
-    }
-
-    fn run(&mut self) -> std::io::Result<MenuAction> {
-        self.render()?;
-
-        if let Event::Key(key_event) = event::read()? {
-            match key_event.code {
-                KeyCode::Up => {
-                    self.selected = self.selected.saturating_sub(1);
-                    Ok(MenuAction::Navigate(self.selected))
-                }
-                KeyCode::Down => {
-                    self.selected = (self.selected + 1).min(self.options.len() - 1);
-                    Ok(MenuAction::Navigate(self.selected))
-                }
-                KeyCode::Enter => Ok(MenuAction::Select),
-                KeyCode::Esc => Ok(MenuAction::Exit),
-                _ => Ok(MenuAction::Navigate(self.selected)),
-            }
-        } else {
-            Ok(MenuAction::Navigate(self.selected))
-        }
     }
 }
