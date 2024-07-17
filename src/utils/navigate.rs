@@ -20,6 +20,7 @@ pub fn navigate_control(
     let num_options = options.len();
 
     // Highlight the menu
+    //todo: create a enum to choose the color and select character
     for (i, option) in options.iter().enumerate() {
         if i == current_selection {
             execute!(stdout, SetForegroundColor(Color::Green))?;
@@ -34,6 +35,7 @@ pub fn navigate_control(
     stdout.flush()?;
 
     // Handle user input
+    //todo: i need to create a way to the key pree come from a enum to futher customization
     if let Event::Key(key_event) = event::read()? {
         if key_event.kind == KeyEventKind::Press {
             return Ok(match key_event.code {
