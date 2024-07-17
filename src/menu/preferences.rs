@@ -3,6 +3,8 @@ use crate::utils::common::clear_terminal;
 use crate::utils::navigate::{navigate_control, MenuAction};
 use std::{thread, time};
 
+//to-do: on the list of profile on the delete, show to option that i can select
+// true or false to the user choose
 pub fn delete_profile_menu() -> Result<(), Box<dyn std::error::Error>> {
     let mut selected_option = 0;
     let options = delete_profile_list()?;
