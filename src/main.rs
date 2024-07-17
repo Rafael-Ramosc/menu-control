@@ -3,7 +3,6 @@ mod utils;
 
 use crossterm::terminal::{self};
 use std::io::{stdout, Write};
-use utils::render::calculate_column;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     terminal::enable_raw_mode()?;
@@ -15,8 +14,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     loop {
         utils::common::clear_terminal();
         menu::main_menu()?;
-
-        calculate_column(0, 20);
 
         stdout.flush()?;
     }

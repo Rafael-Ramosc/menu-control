@@ -5,9 +5,8 @@ pub mod profile;
 
 use crate::menu::profile::{Configuration, Profile};
 use crate::menu::{self, helpers::*};
-use crate::utils::common::{
-    clear_terminal, navigate_and_highlight_menu, print_at_colored, MenuAction,
-};
+use crate::utils::common::{clear_terminal, print_at_colored};
+use crate::utils::navigate::{navigate_control, MenuAction};
 use crate::utils::{self};
 use colored::*;
 use crossterm::event::{self};
@@ -34,7 +33,7 @@ pub fn main_menu() -> Result<(), Box<dyn std::error::Error>> {
         let figure = standard_font.convert("Menu Control").unwrap();
         println!("{}", figure.to_string().green());
 
-        match navigate_and_highlight_menu(&options, selected_option)? {
+        match navigate_control(&options, selected_option)? {
             MenuAction::Navigate(new_selection) => selected_option = new_selection,
             MenuAction::Select => {
                 match selected_option {
@@ -90,7 +89,7 @@ pub fn profile_menu() -> Result<(), Box<dyn std::error::Error>> {
     loop {
         clear_terminal();
 
-        match navigate_and_highlight_menu(&options, selected_option)? {
+        match navigate_control(&options, selected_option)? {
             MenuAction::Navigate(new_selection) => selected_option = new_selection,
             MenuAction::Select => {
                 match selected_option {
