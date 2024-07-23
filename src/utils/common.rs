@@ -1,6 +1,5 @@
 use crossterm::{
     cursor::{self, MoveTo},
-    event::{self, Event, KeyCode, KeyEventKind},
     execute,
     style::{Color, Print, SetForegroundColor},
     terminal,
