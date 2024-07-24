@@ -19,7 +19,7 @@ pub enum MenuAction {
 
 pub struct Menu {
     options: Vec<String>,
-    selected: usize,
+    pub selected: usize,
     title: String,
     footer: String,
 }
