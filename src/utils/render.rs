@@ -17,7 +17,7 @@ pub enum MenuAction {
     Exit,
 }
 
-struct Menu {
+pub struct Menu {
     options: Vec<String>,
     selected: usize,
     title: String,
@@ -25,10 +25,10 @@ struct Menu {
 }
 
 impl Menu {
-    fn new(options: Vec<String>, title: String, footer: String) -> Self {
+   pub fn new(options: Vec<String>, selected: usize, title: String, footer: String) -> Self {
         Self {
             options,
-            selected: 0,
+            selected,
             title,
             footer,
         }
