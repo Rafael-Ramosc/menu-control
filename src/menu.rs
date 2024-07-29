@@ -7,11 +7,10 @@ use crate::menu::profile::{Configuration, Profile};
 use crate::menu::{self, helpers::*};
 use crate::utils::common::{clear_terminal, print_at_colored};
 use crate::utils::render::MenuAction;
-// use crate::utils::navigate::{navigate_control, MenuAction};
 use crate::utils::{self, render};
 use colored::*;
 use crossterm::event::{self};
-use crossterm::style::Color;
+use crossterm::style::Color; //todo: i need to use this instead of colored
 use figlet_rs::FIGfont;
 use std::process;
 use std::{thread, time};
