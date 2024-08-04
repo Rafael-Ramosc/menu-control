@@ -15,6 +15,8 @@ use figlet_rs::FIGfont;
 use std::process;
 use std::{thread, time};
 
+// const CREATER_FOOTER: String = "Rafael Ramos - 2024".to_string();
+
 pub fn main_menu() -> Result<(), Box<dyn std::error::Error>> {
     let options: Vec<String> = vec![
     "1. Create new profile".to_string(),
@@ -24,9 +26,7 @@ pub fn main_menu() -> Result<(), Box<dyn std::error::Error>> {
     "5. Exit".to_string(),
 ];
 
-    
-
-    let mut main_menu = render::Menu::new(options, 0, "Menu Control".to_string(), "Rafael Ramos - 2024".to_string());
+    let mut main_menu = render::Menu::new(options, 0, "Menu Control".to_string(),  "Rafael Ramos - 2024".to_string());
 
     loop {
         clear_terminal();
@@ -75,42 +75,44 @@ pub fn main_menu() -> Result<(), Box<dyn std::error::Error>> {
 
 //todo: finish the profile menu
 pub fn profile_menu() -> Result<(), Box<dyn std::error::Error>> {
-    let options = vec![
-        "1. Change preferences",
-        "2. Delete profile",
-        "3. Back to menu",
+    let options: Vec<String> = vec![
+        "1. Change preferences".to_string(),
+        "2. Delete profile".to_string(),
+        "3. Back to menu".to_string(),
     ];
-    let mut selected_option = 0;
+   
+
+   let mut profile_menu = render::Menu::new(options, 0, "Profile Menu".to_string(), "Rafael Ramos - 2024".to_string());
 
     loop {
         clear_terminal();
 
-        // match navigate_control(&options, selected_option)? {
-        //     MenuAction::Navigate(new_selection) => selected_option = new_selection,
-        //     MenuAction::Select => {
-        //         match selected_option {
-        //             0 => {
-        //                 clear_terminal();
-        //                 println!("Change preferences");
-        //                 menu::preferences::change_preference_menu();
-        //             }
-        //             1 => {
-        //                 clear_terminal();
-        //                 match preferences::delete_profile_menu() {
-        //                     Ok(_) => println!("Profile deleted successfully."),
-        //                     Err(e) => println!("An error occurred while deleting profile: {}", e),
-        //                 }
-        //             }
-        //             2 => break, // Back to main menu
-        //             _ => println!("Invalid option!"),
-        //         }
-        //         println!("\nPress any key to continue...");
-        //         crossterm::event::read()?;
-        //     }
-        //     MenuAction::Back => break,
-        //     MenuAction::Exit => return Ok(()), // Exit the entire program
-        // }
+        match render::Menu::navigate_control( &mut profile_menu)?{
+            MenuAction::Navigate(_) => continue,
+            MenuAction::Select => {
+                match profile_menu.selected {
+                    0 => {
+                        clear_terminal();
+                        println!("Change preferences");
+                        menu::preferences::change_preference_menu();
+                    }
+                    1 => {
+                        clear_terminal();
+                        match preferences::delete_profile_menu() {
+                            Ok(_) => println!("Profile deleted successfully."),
+                            Err(e) => println!("An error occurred while deleting profile: {}", e),
+                        }
+                    }
+                    2 => return Ok(()),
+                    _ => println!("Invalid option!"),
+                }
+                println!("\nPress any key to continue...");
+                event::read()?;
+            }
+            MenuAction::Back => continue,
+            MenuAction::Exit => return Ok(()),
+
+        }
     }
 
-    Ok(())
 }
