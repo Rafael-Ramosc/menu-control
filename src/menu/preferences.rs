@@ -1,4 +1,4 @@
-use crate::menu::get_all_profiles;
+use crate::menu::{get_all_profiles, profile};
 use crate::utils::common::clear_terminal;
 use crate::utils::navigate::{navigate_control, MenuAction};
 use std::{thread, time};
@@ -13,6 +13,9 @@ pub fn delete_profile_menu() -> Result<(), Box<dyn std::error::Error>> {
         clear_terminal();
         println!("Delete profile");
 
+       let mut profiles = get_all_profiles()?;
+
+        let options: Vec<String> = profiles.iter().map(|p| p.get_profile_name().to_string()).collect();
         let option_slice: Vec<&str> = options.iter().map(AsRef::as_ref).collect();
 
         match navigate_control(&option_slice, selected_option)? {
@@ -20,6 +23,8 @@ pub fn delete_profile_menu() -> Result<(), Box<dyn std::error::Error>> {
             MenuAction::Select => {
                 println!("Deleting profile: {}", options[selected_option]);
                 // TODO: Implement actual profile deletion logic here
+                profiles[selected_option].set_profile_status(true);
+                
                 thread::sleep(time::Duration::from_secs(2));
             }
             MenuAction::Back => break,

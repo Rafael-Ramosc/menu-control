@@ -45,3 +45,7 @@ pub fn json_data(new_profile_json: &str) -> std::io::Result<()> {
 
     Ok(())
 }
+
+pub fn change_json () {
+    //todo: implement a way to change json data
+}

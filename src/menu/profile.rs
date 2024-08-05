@@ -33,6 +33,7 @@ impl Profile {
     }
 
     pub fn set_profile_status(&mut self, status: bool) {
+        println!("Profile status: {}", status);
         self.is_blocked = status;
     }
 }
