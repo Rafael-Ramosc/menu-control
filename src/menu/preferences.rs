@@ -1,13 +1,13 @@
-use crate::menu::{get_all_profiles, profile};
+use crate::menu::json::update_profile_status_in_json;
+use crate::menu::get_all_profiles;
 use crate::utils::common::clear_terminal;
 use crate::utils::navigate::{navigate_control, MenuAction};
 use std::{thread, time};
 
-//to-do: on the list of profile on the delete, show to option that i can select
-// true or false to the user choose
+//todo: need to implement the menu here
 pub fn delete_profile_menu() -> Result<(), Box<dyn std::error::Error>> {
     let mut selected_option = 0;
-    let options = delete_profile_list()?;
+    // let options = delete_profile_list()?;
 
     loop {
         clear_terminal();
@@ -21,10 +21,10 @@ pub fn delete_profile_menu() -> Result<(), Box<dyn std::error::Error>> {
         match navigate_control(&option_slice, selected_option)? {
             MenuAction::Navigate(new_selection) => selected_option = new_selection,
             MenuAction::Select => {
-                println!("Deleting profile: {}", options[selected_option]);
-                // TODO: Implement actual profile deletion logic here
+                //todo: if the profile is blocked, show a message to the user
+                // need to create a flow that verifies if the profile is blocked
+                // need to seed false or true
                 profiles[selected_option].set_profile_status(true);
-                
                 thread::sleep(time::Duration::from_secs(2));
             }
             MenuAction::Back => break,

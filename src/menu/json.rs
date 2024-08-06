@@ -92,3 +92,38 @@ pub fn change_json(profile: Profile) -> std::io::Result<()> {
 
     Ok(())
 }
+
+pub fn update_profile_status_in_json(id: i32, new_status: bool) -> std::io::Result<()> {
+    let dir_path = Path::new("data");
+    let file_path = dir_path.join("profile.json");
+
+    
+    let mut file = OpenOptions::new()
+        .read(true)
+        .write(true)
+        .open(&file_path)?;
+
+    let mut content = String::new();
+    file.read_to_string(&mut content)?;
+
+    let mut json_value: Value = serde_json::from_str(&content)?;
+
+
+    if let Some(profiles) = json_value["profiles"].as_array_mut() {
+        if let Some(profile) = profiles.iter_mut().find(|p| p["id"] == id) {
+            profile["is_blocked"] = json!(new_status);
+            
+            
+            file.seek(SeekFrom::Start(0))?;
+            file.set_len(0)?;
+            file.write_all(serde_json::to_string_pretty(&json_value)?.as_bytes())?;
+            
+           // println!("Profile status updated in JSON for ID: {}", id);
+            Ok(())
+        } else {
+            Err(std::io::Error::new(std::io::ErrorKind::NotFound, "Profile not found"))
+        }
+    } else {
+        Err(std::io::Error::new(std::io::ErrorKind::InvalidData, "Invalid JSON structure"))
+    }
+}
