@@ -10,8 +10,6 @@ use crate::utils::render::MenuAction;
 use crate::utils::{self, render};
 use colored::*;
 use crossterm::event::{self};
-use crossterm::style::Color; //todo: i need to use this instead of colored
-use figlet_rs::FIGfont;
 use std::process;
 use std::{thread, time};
 
@@ -67,8 +65,12 @@ pub fn main_menu() -> Result<(), Box<dyn std::error::Error>> {
                 println!("\nPress any key to return to the menu...");
                 event::read()?;
             }
-            MenuAction::Back => continue,
-            MenuAction::Exit => return Ok(()),
+            MenuAction::Back => return Ok(()),
+            MenuAction::Exit => {
+                utils::common::clear_terminal();
+                println!("Closing...");
+                process::exit(0)
+            },
         }
     }
 }
@@ -109,7 +111,7 @@ pub fn profile_menu() -> Result<(), Box<dyn std::error::Error>> {
                 println!("\nPress any key to continue...");
                 event::read()?;
             }
-            MenuAction::Back => continue,
+            MenuAction::Back =>  return Ok(()),
             MenuAction::Exit => return Ok(()),
 
         }
