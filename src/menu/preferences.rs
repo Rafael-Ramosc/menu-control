@@ -1,10 +1,10 @@
 use crate::menu::get_all_profiles;
 use crate::utils::common::clear_terminal;
 use crate::utils::render::MenuAction;
-use crate::utils::{self, render};
+use crate::utils::render;
 use std::{thread, time};
 
-//todo: need to implement the menu here
+//todo: enumerate list of options??? .enumerate???
 pub fn delete_profile_menu() -> Result<(), Box<dyn std::error::Error>> {
     let mut profiles = get_all_profiles()?;
     let options: Vec<String> = profiles.iter().map(|p| p.get_profile_name().to_string()).collect();

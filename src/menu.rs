@@ -5,7 +5,7 @@ pub mod profile;
 
 use crate::menu::profile::{Configuration, Profile};
 use crate::menu::{self, helpers::*};
-use crate::utils::common::{clear_terminal, print_at_colored};
+use crate::utils::common::{clear_terminal};
 use crate::utils::render::MenuAction;
 use crate::utils::{self, render};
 use colored::*;
@@ -111,7 +111,7 @@ pub fn profile_menu() -> Result<(), Box<dyn std::error::Error>> {
                 println!("\nPress any key to continue...");
                 event::read()?;
             }
-            MenuAction::Back =>  return Ok(()),
+            MenuAction::Back => return Ok(()),
             MenuAction::Exit => return Ok(()),
 
         }

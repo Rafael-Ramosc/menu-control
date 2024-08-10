@@ -62,7 +62,7 @@ pub fn create_profile(prompt: &str) -> Result<Option<Profile>, Box<dyn std::erro
     }
 }
 
-pub fn profiles_list() -> Result<(), Box<dyn std::error::Error>> {
+pub fn  profiles_list() -> Result<(), Box<dyn std::error::Error>> {
     println!("{}", "profile list:".yellow());
     match get_profile_filtered() {
         Ok(profiles) => {
