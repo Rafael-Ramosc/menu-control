@@ -21,8 +21,8 @@ pub fn delete_profile_menu() -> Result<(), Box<dyn std::error::Error>> {
                 let selected = delete_profile_menu.selected;
                 if selected < profiles.len() {
                     let current_status = profiles[selected].get_profile_status();
-                    profiles[selected].set_profile_status(!current_status);
-                    thread::sleep(time::Duration::from_secs(1));
+                    profiles[selected].set_profile_status(!current_status)?;
+                    thread::sleep(time::Duration::from_millis(33));
                 } else {
                     println!("Invalid selection!");
                 }

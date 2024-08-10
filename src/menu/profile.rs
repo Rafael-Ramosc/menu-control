@@ -1,3 +1,6 @@
+use std::io::stdout;
+
+use crossterm::{cursor::MoveTo, execute, terminal::size};
 use serde::{Deserialize, Serialize};
 use colored::*;
 use crate::menu::json::{change_json, update_profile_status_in_json};
@@ -34,14 +37,27 @@ impl Profile {
         self.is_blocked
     }
 
-    pub fn set_profile_status(&mut self, status: bool) {
+    pub fn set_profile_status(&mut self, status: bool) -> Result<(), Box<dyn std::error::Error>> {
         self.is_blocked = status;
-        let status_string = if status { status.to_string().green()} else { status.to_string().red()};
+        let status_string = if status { 
+            status.to_string().green()
+        } else { 
+            status.to_string().red()
+        };
+
         match update_profile_status_in_json(self.id, status) {
-            Ok(_) => println!("Profile {}, status changed to {}", self.profile_name, status_string),
+            Ok(_) => {
+                let (_, rows) = size()?;
+                execute!(
+                    stdout(),
+                    MoveTo(0, rows/2)
+                )?;
+                println!("Profile {}, status changed to {}", self.profile_name, status_string);
+            },
             Err(e) => println!("Error updating profile status: {}", e),
         }
         
+        Ok(())
     }
       
 }
