@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-
+use colored::*;
 use crate::menu::json::{change_json, update_profile_status_in_json};
 
 const GREEN_COLOR: u8 = 2;
@@ -36,8 +36,9 @@ impl Profile {
 
     pub fn set_profile_status(&mut self, status: bool) {
         self.is_blocked = status;
+        let status_string = if status { status.to_string().green()} else { status.to_string().red()};
         match update_profile_status_in_json(self.id, status) {
-            Ok(_) => println!("Profile {}, status updated successfully", self.profile_name),
+            Ok(_) => println!("Profile {}, status changed to {}", self.profile_name, status_string),
             Err(e) => println!("Error updating profile status: {}", e),
         }
         

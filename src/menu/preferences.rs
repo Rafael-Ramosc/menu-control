@@ -21,11 +21,12 @@ pub fn delete_profile_menu() -> Result<(), Box<dyn std::error::Error>> {
         match navigate_control(&option_slice, selected_option)? {
             MenuAction::Navigate(new_selection) => selected_option = new_selection,
             MenuAction::Select => {
-                //todo: if the profile is blocked, show a message to the user
-                // need to create a flow that verifies if the profile is blocked
-                // need to seed false or true
-                profiles[selected_option].set_profile_status(true);
-                thread::sleep(time::Duration::from_secs(2));
+                match profiles[selected_option].get_profile_status() {
+                  true =>  profiles[selected_option].set_profile_status(false),
+                  false=>  profiles[selected_option].set_profile_status(true),
+                }
+               
+                thread::sleep(time::Duration::from_secs(1));
             }
             MenuAction::Back => break,
             MenuAction::Exit => return Ok(()),
