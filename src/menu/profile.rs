@@ -13,11 +13,11 @@ pub struct Profile {
 }
 
 impl Profile {
-    pub fn new(id: i32, profile_name: String, is_blocked: bool) -> Self {
+    pub fn new(id: i32, profile_name: String) -> Self {
         Self {
             id,
             profile_name,
-            is_blocked,
+            is_blocked: false,
             preferences: Configuration::default(),
         }
     }

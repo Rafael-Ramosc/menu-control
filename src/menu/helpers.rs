@@ -43,8 +43,7 @@ pub fn create_profile(prompt: &str) -> Result<Option<Profile>, Box<dyn std::erro
 
                             let profile: Profile = Profile::new(
                                 profile_next_id,
-                                profile_name_select.trim().to_string(),
-                                false,
+                                profile_name_select.trim().to_string()
                             );
                             let new_profile_json = serde_json::to_string_pretty(&profile)?;
                             json::json_data(&new_profile_json)?;
