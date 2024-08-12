@@ -47,7 +47,7 @@ pub fn main_menu() -> Result<(), Box<dyn std::error::Error>> {
                     },
                     1 => {
                         utils::common::clear_terminal();
-                        profiles_list().unwrap();
+                        profiles_list_menu().unwrap();
                     }
                     2 => {
                         utils::common::clear_terminal();

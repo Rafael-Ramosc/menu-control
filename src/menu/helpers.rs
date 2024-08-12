@@ -1,5 +1,7 @@
 use crate::menu::{json, profile::Profile};
-use crate::utils;
+use crate::utils::render::MenuAction;
+use crate::utils::{self, render};
+use crate::utils::common::clear_terminal;
 use colored::*;
 use crossterm::event::{self, Event, KeyCode, KeyEventKind};
 use serde_json::Value;
@@ -59,6 +61,39 @@ pub fn create_profile(prompt: &str) -> Result<Option<Profile>, Box<dyn std::erro
             }
         }
     }
+}
+
+pub fn profiles_list_menu () -> Result<(), Box<dyn std::error::Error>>{
+
+    let profiles_list = match get_profile_filtered() {
+        Ok (profiles) => profiles,
+        Err(e) => {
+            println!("Error when getting profile list {:?}", e);
+            Vec::new()
+        } 
+    };
+
+    let options: Vec<String> = profiles_list.iter().map(|p| p.get_profile_name().to_string()).collect();
+
+    let mut profile_list_menu = render::Menu::new(options, 0, "Profile List".to_string(), "Rafael Ramos - 2024".to_string());
+
+    loop {
+
+        clear_terminal();
+
+        match render::Menu::navigate_control(&mut profile_list_menu)? {
+            MenuAction::Navigate(_) => continue,
+            MenuAction::Select => {
+                let selected = profile_list_menu.selected;
+                
+            }
+            MenuAction::Back => return Ok(()),
+            MenuAction::Exit => return Ok(()),
+        }
+
+    }
+    
+   
 }
 
 pub fn  profiles_list() -> Result<(), Box<dyn std::error::Error>> {
