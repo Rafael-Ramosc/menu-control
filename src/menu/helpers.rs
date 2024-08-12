@@ -85,7 +85,7 @@ pub fn profiles_list_menu () -> Result<(), Box<dyn std::error::Error>>{
             MenuAction::Navigate(_) => continue,
             MenuAction::Select => {
                 let selected = profile_list_menu.selected;
-                
+
             }
             MenuAction::Back => return Ok(()),
             MenuAction::Exit => return Ok(()),
@@ -96,6 +96,7 @@ pub fn profiles_list_menu () -> Result<(), Box<dyn std::error::Error>>{
    
 }
 
+//todo: usar mesma logica dessa função na função acima profiles_list_menu ()
 pub fn  profiles_list() -> Result<(), Box<dyn std::error::Error>> {
     println!("{}", "profile list:".yellow());
     match get_profile_filtered() {
