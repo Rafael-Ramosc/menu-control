@@ -4,7 +4,7 @@ use crossterm::{
     style::{Color, Print, SetForegroundColor},
     terminal,
 };
-use std::io::{stdout, Write};
+use std::io::stdout;
 
 pub fn clear_terminal() {
     let mut stdout = stdout();

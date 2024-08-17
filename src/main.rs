@@ -18,9 +18,5 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         stdout.flush()?;
     }
 
-    terminal::disable_raw_mode()?;
-
-    stdout.flush()?;
-
     Ok(())
 }

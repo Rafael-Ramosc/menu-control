@@ -3,17 +3,15 @@ pub mod json;
 pub mod preferences;
 pub mod profile;
 
-use crate::menu::profile::{Configuration, Profile};
+use crate::menu::profile::Profile;
 use crate::menu::{self, helpers::*};
-use crate::utils::common::{clear_terminal};
+use crate::utils::common::clear_terminal;
 use crate::utils::render::MenuAction;
 use crate::utils::{self, render};
 use colored::*;
 use crossterm::event::{self};
 use std::process;
 use std::{thread, time};
-
-// const CREATER_FOOTER: String = "Rafael Ramos - 2024".to_string();
 
 pub fn main_menu() -> Result<(), Box<dyn std::error::Error>> {
     let options: Vec<String> = vec![
