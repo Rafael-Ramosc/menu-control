@@ -1,7 +1,5 @@
 use crate::menu::get_all_profiles;
-use crate::utils::common::clear_terminal;
-use crate::utils::render::MenuAction;
-use crate::utils::render;
+use crate::utils::{common::clear_terminal, render::MenuAction, render::Menu};
 use std::{thread, time};
 
 //todo: enumerate list of options??? .enumerate???
@@ -10,12 +8,12 @@ pub fn delete_profile_menu() -> Result<(), Box<dyn std::error::Error>> {
     let options: Vec<String> = profiles.iter().map(|p| p.get_profile_name().to_string()).collect();
     
 
-    let mut delete_profile_menu = render::Menu::new(options, 0, "Delete profile".to_string(), "Rafael Ramos - 2024".to_string());
+    let mut delete_profile_menu = Menu::new(options, 0, "Delete profile".to_string(), "Rafael Ramos - 2024".to_string());
 
     loop {
         clear_terminal();
 
-        match render::Menu::navigate_control(&mut delete_profile_menu)? {
+        match Menu::navigate_control(&mut delete_profile_menu)? {
             MenuAction::Navigate(_) => continue,
             MenuAction::Select => {
                 let selected = delete_profile_menu.selected;

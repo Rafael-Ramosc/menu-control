@@ -1,7 +1,7 @@
 use serde_json::{json, Value};
-use std::fs::{self, OpenOptions};
-use std::io::{Read, Seek, SeekFrom, Write};
-use std::path::Path;
+use std::{fs::{self, OpenOptions}, 
+io::{Read, Seek, SeekFrom, Write}, 
+path::Path};
 use super::profile::Profile;
 
 pub fn json_data(new_profile_json: &str) -> std::io::Result<()> {

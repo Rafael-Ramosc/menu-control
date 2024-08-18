@@ -3,15 +3,11 @@ pub mod json;
 pub mod preferences;
 pub mod profile;
 
-use crate::menu::profile::Profile;
-use crate::menu::{self, helpers::*};
-use crate::utils::common::clear_terminal;
-use crate::utils::render::MenuAction;
-use crate::utils::{self, render};
+use crate::menu::{self, helpers::*, profile::Profile};
+use crate::utils::{common::clear_terminal, render::MenuAction, render, self};
 use colored::*;
 use crossterm::event::{self};
-use std::process;
-use std::{thread, time};
+use std::{thread, time, process};
 
 pub fn main_menu() -> Result<(), Box<dyn std::error::Error>> {
     let options: Vec<String> = vec![
